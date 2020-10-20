@@ -20,14 +20,14 @@ public class Claw extends Mechanism {
     }
 
     public void unfold(){
-        swing.setPosition(0.4);
+        arm.setPosition(0.4);
         folded = false;
         opMode.sleep(400);
 
     }
 
     public void fold(){
-        swing.setPosition(0.01);
+        arm.setPosition(0.01);
         folded = true;
         opMode.sleep(400);
     }
@@ -43,6 +43,7 @@ public class Claw extends Mechanism {
         opened = false;
         opMode.sleep(400);
     }
+
 
     public boolean getOpened(){
         return opened;
