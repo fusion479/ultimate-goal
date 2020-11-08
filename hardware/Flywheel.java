@@ -28,6 +28,11 @@ public class Flywheel{
         left.setPower(trigger);
         right.setPower(trigger);
     }
+    public void runReverse(double trigger){
+        left.setPower(trigger);
+        right.setPower(trigger);
+        right.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
 
     public void runSeparate(double triggerLeft, double triggerRight){
         left.setPower(triggerLeft);
