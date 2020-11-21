@@ -17,6 +17,8 @@ public class Prototype extends LinearOpMode {
         boolean forwards = true;
         int speedState = 0;
         boolean formerX = false;
+        boolean formerA = false;
+        boolean formerB = false;
         flywheel.init(hardwareMap);
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Status", "Waiting in init");
@@ -24,7 +26,7 @@ public class Prototype extends LinearOpMode {
         }
         while (opModeIsActive()) {
             telemetry.addData("Status", "Currently Looping");
-            telemetry.addData("Status", mode);
+            telemetry.addData("Flywheel running", mode);
             telemetry.addData("LeftTrigger", gamepad1.left_trigger);
             telemetry.addData("RightTrigger", gamepad1.right_trigger);
             telemetry.addData("Direction Forwards?", forwards);
@@ -32,12 +34,20 @@ public class Prototype extends LinearOpMode {
 
 
             telemetry.update();
-            if (gamepad1.a) {
-                if(speedState < 5){
-                    speedState ++;
-                }
-                else{
-                    speedState = 0;
+
+            if(gamepad1.a){
+                formerA = true;
+            }
+
+            if(formerA){
+                if(!gamepad1.a) {
+                    if(speedState < 2){
+                        speedState ++;
+                    }
+                    else{
+                        speedState = 0;
+                    }
+                    formerA = false;
                 }
             }
 
@@ -52,28 +62,19 @@ public class Prototype extends LinearOpMode {
                 }
             }
 
+//mode determines when the flywheel runs; speed state determines the speed of the flywheel
             if(mode) {
 
                 if (speedState == 0) {
                     flywheel.runEqual(0.85);
                 }
-                else if(speedState == 1){
-                    flywheel.runReverse(0.6);
+
+                else if(speedState == 1) {
+                    flywheel.runEqual(0.65);
                 }
 
                 else if(speedState == 2){
-                    flywheel.runEqual(0.65);
-                }
-                else if(speedState == 3){
-                    flywheel.runReverse( 0.65);
-                }
-
-                else if(speedState == 4){
                     flywheel.runEqual(gamepad1.left_trigger);
-                }
-
-                else if(speedState == 5){
-                    flywheel.runReverse(gamepad1.left_trigger);
                 }
 
             }
@@ -81,11 +82,18 @@ public class Prototype extends LinearOpMode {
                 flywheel.runEqual(0);
             }
 
-            if (gamepad1.b) {
-                forwards = !forwards;
-                flywheel.reverseDirection(forwards);
+//B button to reverse direction of flywheel
+            if(gamepad1.b){
+                formerB = true;
             }
 
+            if(formerB){
+                if(!gamepad1.b) {
+                    forwards = !forwards;
+                    flywheel.reverseDirection(forwards);
+                    formerB = false;
+                }
+            }
 
         }
     }
