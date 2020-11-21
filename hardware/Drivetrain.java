@@ -37,7 +37,7 @@ public class Drivetrain extends Mechanism {
     /**
      * Diameter of wheel in inches.
      */
-    private static final double WHEEL_DIAMETER_INCHES = 4.0;
+    private static final double WHEEL_DIAMETER_INCHES = 3.78;
 
     /**
      * Calculated ticks per inch.
