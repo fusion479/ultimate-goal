@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.opMode.teleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 
-
+@TeleOp(name="DrivingTest",group="TeleOp")
 public class DrivingTest extends LinearOpMode {
     private Drivetrain drive = new Drivetrain(this);
     @Override
