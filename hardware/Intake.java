@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Intake extends Mechanism {
     private DcMotor roller1;
-    private DcMotor roller2;
-    private double rollerSpeed;
 
     public void init(HardwareMap hwMap) {
         roller1 = hwMap.dcMotor.get("intake");
@@ -16,12 +14,14 @@ public class Intake extends Mechanism {
         roller1.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
-    public void runInward(double trigger) {
+    public void runInward(float trigger) {
+        roller1.setDirection(DcMotorSimple.Direction.FORWARD);
         roller1.setPower(trigger);
     }
 
-    public void runOutward(double trigger) {
-        roller1.setPower((-1)*(trigger));
+    public void runOutward(float trigger) {
+        roller1.setDirection(DcMotorSimple.Direction.REVERSE);
+        roller1.setPower(trigger);
     }
 
     public void setRollerSpeed(double speed) {

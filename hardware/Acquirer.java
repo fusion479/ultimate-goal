@@ -5,21 +5,22 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Acquirer extends Mechanism {
-    private DcMotor acquirer;
+    private DcMotor acquirerM;
 
     public void init(HardwareMap hwMap) {
-        acquirer = hwMap.dcMotor.get("acquirer");
-        acquirer.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        acquirer.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        acquirerM = hwMap.dcMotor.get("acquirerM");
+        acquirerM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        acquirerM.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        acquirerM.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     public void intake(float power){
-        acquirer.setDirection(DcMotorSimple.Direction.REVERSE);
-        acquirer.setPower(power);
+        acquirerM.setDirection(DcMotorSimple.Direction.REVERSE);
+        acquirerM.setPower(power);
     }
 
     public void outake(float power){
-        acquirer.setDirection(DcMotorSimple.Direction.FORWARD);
-        acquirer.setPower(power);
+        acquirerM.setDirection(DcMotorSimple.Direction.FORWARD);
+        acquirerM.setPower(power);
     }
 }
