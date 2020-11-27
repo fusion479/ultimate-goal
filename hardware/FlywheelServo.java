@@ -34,9 +34,12 @@ public class FlywheelServo extends Mechanism{
     }
 
     public void flick(){
-        if(flickServo.getPosition() == 0.5) {
-            endPos();
+        if(flickServo.getPosition() < 0.5){
+            flickServo.setDirection(Servo.Direction.FORWARD);
+            flickServo.setPosition(0.5);
         }
+        startPos();
+        endPos();
         startPos();
     }
 }
