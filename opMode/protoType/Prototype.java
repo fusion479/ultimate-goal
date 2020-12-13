@@ -6,10 +6,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.hardware.Flywheel;
+import org.firstinspires.ftc.teamcode.hardware.FlywheelServo;
+import org.firstinspires.ftc.teamcode.opMode.DelayCommand;
 
 @TeleOp
 public class Prototype extends LinearOpMode {
     private Flywheel flywheel = new Flywheel();
+    private FlywheelServo flywheelServo = new FlywheelServo();
+    private DelayCommand delay = new DelayCommand();
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -19,7 +24,9 @@ public class Prototype extends LinearOpMode {
         boolean formerX = false;
         boolean formerA = false;
         boolean formerB = false;
+        boolean formerY = false;
         flywheel.init(hardwareMap);
+        flywheelServo.init(hardwareMap);
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Status", "Waiting in init");
             telemetry.update();
@@ -31,6 +38,7 @@ public class Prototype extends LinearOpMode {
             telemetry.addData("RightTrigger", gamepad1.right_trigger);
             telemetry.addData("Direction Forwards?", forwards);
             telemetry.addData("The speedState is ",speedState);
+            telemetry.addData("Servo POS ", flywheelServo.currentPos());
 
 
             telemetry.update();
@@ -66,7 +74,7 @@ public class Prototype extends LinearOpMode {
             if(mode) {
 
                 if (speedState == 0) {
-                    flywheel.runEqual(0.85);
+                    flywheel.runEqual(1.0);
                 }
 
                 else if(speedState == 1) {
@@ -92,6 +100,21 @@ public class Prototype extends LinearOpMode {
                     forwards = !forwards;
                     flywheel.reverseDirection(forwards);
                     formerB = false;
+                }
+            }
+            if(gamepad1.y){
+                formerY = true;
+            }
+            if(formerY){
+                if(!gamepad1.y){
+                    if(flywheelServo.currentPos() == 1.0){
+                        flywheelServo.startPos();
+                    }
+
+                    else{
+                        flywheelServo.endPos();
+                    }
+                    formerY = false;
                 }
             }
 

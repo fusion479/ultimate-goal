@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.FlywheelServo;
 
-@TeleOp(name="DrivingTest",group="TeleOp")
+@TeleOp(name="FlickNotTeleOp",group="TeleOp")
 public class FlickNotTeleOp extends LinearOpMode {
     private FlywheelServo flywheelServo = new FlywheelServo();
 

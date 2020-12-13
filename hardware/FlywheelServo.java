@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class FlywheelServo extends Mechanism{
+public class FlywheelServo extends Mechanism {
     private Servo flickServo;
 
     public void init(HardwareMap hwMap){
@@ -12,12 +12,10 @@ public class FlywheelServo extends Mechanism{
     }
 
     public void startPos(){
-        flickServo.setDirection(Servo.Direction.REVERSE);
-        flickServo.setPosition(0.5);
+        flickServo.setPosition(0.0);
     }
 
     public void endPos(){
-        flickServo.setDirection(Servo.Direction.FORWARD);
         flickServo.setPosition(1.0);
     }
 
@@ -34,12 +32,16 @@ public class FlywheelServo extends Mechanism{
     }
 
     public void flick(){
-        if(flickServo.getPosition() < 0.5){
-            flickServo.setDirection(Servo.Direction.FORWARD);
-            flickServo.setPosition(0.5);
+        startPos();
+        if(flickServo.getPosition()==0.0){
+            endPos();
         }
-        startPos();
-        endPos();
-        startPos();
+        if(flickServo.getPosition()==1.0){
+            startPos();
+        }
+
+    }
+    public double currentPos(){
+        return flickServo.getPosition();
     }
 }
