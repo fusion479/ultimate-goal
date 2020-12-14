@@ -41,6 +41,12 @@ public class FlywheelServo extends Mechanism {
         }
 
     }
+    public void forwards(){
+        flickServo.setDirection(Servo.Direction.FORWARD);
+    }
+    public void backwards(){
+        flickServo.setDirection(Servo.Direction.REVERSE);
+    }
     public double currentPos(){
         return flickServo.getPosition();
     }

@@ -8,6 +8,6 @@ public class DelayCommand {
 
     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     public void delay(Runnable event, int delay){
-        executorService.schedule(event, delay, TimeUnit.SECONDS);
+        executorService.schedule(event, delay, TimeUnit.MILLISECONDS);
     }
 }

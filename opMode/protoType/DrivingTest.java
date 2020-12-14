@@ -40,8 +40,6 @@ public class DrivingTest extends LinearOpMode {
                 }
             }
 
-            acquirer.intake(gamepad1.right_trigger);
-            acquirer.outake(gamepad1.left_trigger);
 
         }
     }

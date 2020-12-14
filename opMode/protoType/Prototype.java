@@ -13,11 +13,11 @@ import org.firstinspires.ftc.teamcode.opMode.DelayCommand;
 public class Prototype extends LinearOpMode {
     private Flywheel flywheel = new Flywheel();
     private FlywheelServo flywheelServo = new FlywheelServo();
-    private DelayCommand delay = new DelayCommand();
 
 
     @Override
     public void runOpMode() throws InterruptedException {
+        DelayCommand delay = new DelayCommand();
         boolean mode = false;
         boolean forwards = true;
         int speedState = 0;
@@ -27,6 +27,7 @@ public class Prototype extends LinearOpMode {
         boolean formerY = false;
         flywheel.init(hardwareMap);
         flywheelServo.init(hardwareMap);
+        flywheelServo.backwards();
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Status", "Waiting in init");
             telemetry.update();
@@ -39,7 +40,6 @@ public class Prototype extends LinearOpMode {
             telemetry.addData("Direction Forwards?", forwards);
             telemetry.addData("The speedState is ",speedState);
             telemetry.addData("Servo POS ", flywheelServo.currentPos());
-
 
             telemetry.update();
 
@@ -78,7 +78,7 @@ public class Prototype extends LinearOpMode {
                 }
 
                 else if(speedState == 1) {
-                    flywheel.runEqual(0.65);
+                    flywheel.runEqual(0.85);
                 }
 
                 else if(speedState == 2){
@@ -107,13 +107,26 @@ public class Prototype extends LinearOpMode {
             }
             if(formerY){
                 if(!gamepad1.y){
+                    /*
                     if(flywheelServo.currentPos() == 1.0){
                         flywheelServo.startPos();
                     }
 
                     else{
                         flywheelServo.endPos();
-                    }
+                    }*/
+                    flywheelServo.startPos();
+                    Runnable start = new Runnable() {
+                        public void run() {
+                            flywheelServo.endPos();
+                        }};
+                    Runnable end = new Runnable() {
+                        public void run() {
+                            flywheelServo.startPos();
+                        }};
+                    delay.delay(end,100);
+                    delay.delay(start,200);
+
                     formerY = false;
                 }
             }
