@@ -27,7 +27,7 @@ public class ServoTest extends LinearOpMode {
 
             if(formerA){
                 if(!gamepad1.a) {
-                    flickServo.setPosition(0.5);
+                    flickServo.setPosition(0.3);
                     formerA = false;
                 }
             }
@@ -49,7 +49,7 @@ public class ServoTest extends LinearOpMode {
 
             if(formerB){
                 if(!gamepad1.b) {
-                    flickServo.setPosition(1.0);
+                    flickServo.setPosition(0.99);
                     formerB = false;
                 }
             }
