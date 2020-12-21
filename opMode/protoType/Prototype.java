@@ -122,10 +122,10 @@ public class Prototype extends LinearOpMode {
                         }};
                     Runnable end = new Runnable() {
                         public void run() {
-                            flywheelServo.startPos();
+                            flywheelServo.setPosition(0.5);
                         }};
                     delay.delay(end,100);
-                    delay.delay(start,200);
+                    delay.delay(start,150);
 
                     formerY = false;
                 }
