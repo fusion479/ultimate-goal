@@ -10,7 +10,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 public class Camera extends Mechanism{
     private OpenCvCamera phoneCam;
     public void init(HardwareMap hwMap){
-        int cameraMonitorViewID = hwMap.appContext.getResources().getIdentifier("CameraMonitor","id",hwMap.appContext.getPackageName());
+        int cameraMonitorViewID = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
         phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK,cameraMonitorViewID);
         phoneCam.openCameraDevice();
         phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
