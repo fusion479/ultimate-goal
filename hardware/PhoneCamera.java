@@ -9,8 +9,9 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-
-public class Camera extends Mechanism{
+//A new class will probably be created for a normal webcam.
+//This code works if you are using a phone as a robot controller, and want to use it as your camera.
+public class PhoneCamera extends Mechanism{
     //here I initialize the phone camera and the pipeline; there are other ways to do this if you prefer
     private OpenCvInternalCamera phoneCam;
     private RingCounter counter = new RingCounter();

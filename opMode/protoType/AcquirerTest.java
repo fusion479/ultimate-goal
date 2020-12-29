@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer2;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
-
+//Code for testing the acquirer with the addition of the Drivetrain.
 @TeleOp(name="AcquirerTest",group="TeleOp")
 public class AcquirerTest extends LinearOpMode {
     private Acquirer acquirer = new Acquirer();

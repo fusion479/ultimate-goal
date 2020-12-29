@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opMode.protoType;
 
+//Code for playing around with servos. Go on, experiment!
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;

@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.FlywheelServo;
-
+//idk what this was for
 @TeleOp(name="FlickNotTeleOp",group="TeleOp")
 public class FlickNotTeleOp extends LinearOpMode {
     private FlywheelServo flywheelServo = new FlywheelServo();
