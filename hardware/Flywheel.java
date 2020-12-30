@@ -3,13 +3,15 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+//This code may be subject to change following up to the finalization of our robot design.
+//If that turns out to be the case, old code will be commented out.
 
 public class Flywheel extends Mechanism {
     private DcMotor left;
     private DcMotor right;
     private double leftSpeed;
     private double rightSpeed;
-
+    //just initializing the motors for use in flywheel
     public void init(HardwareMap hwMap) {
         left = hwMap.dcMotor.get("left");
         right = hwMap.dcMotor.get("right");
@@ -23,23 +25,27 @@ public class Flywheel extends Mechanism {
 
     }
 
-    public void runEqual(double trigger) {
-        left.setPower(trigger);
-        right.setPower(trigger);
+    //Sets the same amount of power through the flywheels in the same direction
+    public void runEqual(double power) {
+        left.setPower(power);
+        right.setPower(power);
     }
 
-    public void runReverse(double trigger) {
-        left.setPower(trigger);
-        right.setPower(trigger);
+    //Mainly used in early stages of flywheel prototyping. The motors run in opposite directions.
+    //This code is a bit wack because if the direction is wrong it needs to be adjusted directly here.
+    public void runReverse(double power) {
+        left.setPower(power);
+        right.setPower(power);
         right.setDirection(DcMotorSimple.Direction.REVERSE);
     }
-
-    public void runSeparate(double triggerLeft, double triggerRight) {
-        left.setPower(triggerLeft);
-        right.setPower(triggerRight);
+    //Sends different amounts of power through the flywheel
+    public void runSeparate(double leftPower, double rightPower) {
+        left.setPower(leftPower);
+        right.setPower(rightPower);
 
     }
 
+    //Reverses the direction of the flywheel. This is incompatible with runReverse method.
     public void reverseDirection(boolean forwards) {
         if (forwards) {
             left.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -48,10 +54,5 @@ public class Flywheel extends Mechanism {
             left.setDirection(DcMotorSimple.Direction.REVERSE);
             right.setDirection(DcMotorSimple.Direction.REVERSE);
         }
-    }
-
-    public void setSpeed(double speed) {
-        left.setPower(speed);
-        right.setPower(speed);
     }
 }

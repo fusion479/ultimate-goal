@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
-
+//We had issues with getting the DT to drive straight, so this code is meant to troubleshoot such issues.
 @TeleOp(name="DrivingTest",group="TeleOp")
 public class DrivingTest extends LinearOpMode {
 
@@ -18,6 +18,7 @@ public class DrivingTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException{
+<<<<<<< HEAD
         frontLeft = hardwareMap.get(DcMotorEx.class,"frontLeft");
         frontRight = hardwareMap.get(DcMotorEx.class,"frontRight");
         backLeft = hardwareMap.get(DcMotorEx.class,"backLeft");
@@ -26,6 +27,15 @@ public class DrivingTest extends LinearOpMode {
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+=======
+        //Remember, parts initialization.
+        //Here I'm directly calling the motors since this is only for troubleshooting. Generally you want to write this stuff as a mechanism.
+        frontLeft = hardwareMap.dcMotor.get("frontLeft");
+        frontRight = hardwareMap.dcMotor.get("frontRight");
+        backLeft = hardwareMap.dcMotor.get("backLeft");
+        backRight = hardwareMap.dcMotor.get("backRight");
+        //Starting off by resetting the encoders.
+>>>>>>> 739493e2ed5296f2646602cf6ad06013de44e80d
         resetEncoders();
         boolean formerB = false;
 
@@ -37,6 +47,7 @@ public class DrivingTest extends LinearOpMode {
         }
 
         while(opModeIsActive()){
+            //Puts power and gets the DT to go STRAIGHT either forwards OR backwards.
             if(gamepad1.a){
                 frontLeft.setVelocity(-speed);
                 frontRight.setVelocity(speed);
@@ -50,11 +61,16 @@ public class DrivingTest extends LinearOpMode {
                 backRight.setPower(0.0);
 
             }
+<<<<<<< HEAD
 
+=======
+            //Important information about the distance the motors traveled.
+>>>>>>> 739493e2ed5296f2646602cf6ad06013de44e80d
             telemetry.addData("FL: Encoder value", frontLeft.getCurrentPosition());
             telemetry.addData("FR: Encoder value", frontRight.getCurrentPosition());
             telemetry.addData("BL: Encoder value", backLeft.getCurrentPosition());
             telemetry.addData("BR: Encoder value", backRight.getCurrentPosition());
+            telemetry.addData("Forwards?",frontLeft.getDirection() == DcMotorSimple.Direction.FORWARD);
 
             telemetry.update();
 
@@ -74,6 +90,7 @@ public class DrivingTest extends LinearOpMode {
 
         }
     }
+    //Reverses the direction of the motors. Probably would be better to use .equals() but if it works it works. Not too concerned RN.
     public void reverse(){
         if(frontLeft.getDirection() == DcMotorSimple.Direction.FORWARD){
             frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -88,6 +105,8 @@ public class DrivingTest extends LinearOpMode {
             backRight.setDirection(DcMotorSimple.Direction.FORWARD);
         }
     }
+
+    //Reset the encoders for troubleshooting and starting the next test round.
     public void resetEncoders(){
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

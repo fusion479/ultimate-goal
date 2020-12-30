@@ -3,12 +3,11 @@ package org.firstinspires.ftc.teamcode.opMode.protoType;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.hardware.Flywheel;
 import org.firstinspires.ftc.teamcode.hardware.FlywheelServo;
-import org.firstinspires.ftc.teamcode.opMode.DelayCommand;
-
+import org.firstinspires.ftc.teamcode.DelayCommand;
+//Probably should be named something else but too far in to change it. Code for prototyping the flywheel.
 @TeleOp
 public class Prototype extends LinearOpMode {
     private Flywheel flywheel = new Flywheel();
@@ -18,6 +17,7 @@ public class Prototype extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         DelayCommand delay = new DelayCommand();
+        //These values are all important in setting direction and speed.
         boolean mode = false;
         boolean forwards = true;
         int speedState = 0;
@@ -27,12 +27,12 @@ public class Prototype extends LinearOpMode {
         boolean formerY = false;
         flywheel.init(hardwareMap);
         flywheelServo.init(hardwareMap);
-        flywheelServo.backwards();
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Status", "Waiting in init");
             telemetry.update();
         }
         while (opModeIsActive()) {
+            //Information about different values
             telemetry.addData("Status", "Currently Looping");
             telemetry.addData("Flywheel running", mode);
             telemetry.addData("LeftTrigger", gamepad1.left_trigger);
@@ -43,6 +43,7 @@ public class Prototype extends LinearOpMode {
 
             telemetry.update();
 
+            //Changes the speed state between 3 modes
             if(gamepad1.a){
                 formerA = true;
             }
@@ -59,6 +60,7 @@ public class Prototype extends LinearOpMode {
                 }
             }
 
+            //Turns the flywheel on and off.
             if(gamepad1.x){
                 formerX = true;
             }
@@ -70,7 +72,7 @@ public class Prototype extends LinearOpMode {
                 }
             }
 
-//mode determines when the flywheel runs; speed state determines the speed of the flywheel
+            //mode determines when the flywheel runs; speed state determines the speed of the flywheel
             if(mode) {
 
                 if (speedState == 0) {
@@ -90,7 +92,7 @@ public class Prototype extends LinearOpMode {
                 flywheel.runEqual(0);
             }
 
-//B button to reverse direction of flywheel
+            //b button to reverse direction of flywheel if the direction turned out wrong.
             if(gamepad1.b){
                 formerB = true;
             }
@@ -102,31 +104,14 @@ public class Prototype extends LinearOpMode {
                     formerB = false;
                 }
             }
+
+            //Used to test the flywheelServo and how well it worked with the flywheel.
             if(gamepad1.y){
                 formerY = true;
             }
             if(formerY){
                 if(!gamepad1.y){
-                    /*
-                    if(flywheelServo.currentPos() == 1.0){
-                        flywheelServo.startPos();
-                    }
-
-                    else{
-                        flywheelServo.endPos();
-                    }*/
-                    flywheelServo.startPos();
-                    Runnable start = new Runnable() {
-                        public void run() {
-                            flywheelServo.endPos();
-                        }};
-                    Runnable end = new Runnable() {
-                        public void run() {
-                            flywheelServo.setPosition(0.5);
-                        }};
-                    delay.delay(end,100);
-                    delay.delay(start,150);
-
+                    flywheelServo.flick();
                     formerY = false;
                 }
             }
