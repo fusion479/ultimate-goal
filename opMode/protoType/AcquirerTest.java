@@ -19,6 +19,7 @@ public class AcquirerTest extends LinearOpMode {
         backRoller.init(hardwareMap);
         drive.init(hardwareMap);
         boolean formerA = false;
+        boolean formerX = false;
 
         while(!opModeIsActive() && !isStopRequested()){
             telemetry.addData("Status", "Waiting in init");
@@ -40,25 +41,36 @@ public class AcquirerTest extends LinearOpMode {
                 acquirer.outake(0);
                 backRoller.intake(0);
             }
-
-            boolean formerX = false;
-            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            double r = Math.hypot(gamepad1.left_stick_x,gamepad1.left_stick_y);
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-            double rightX = gamepad1.right_stick_x;
+            double rightX = -1*gamepad1.right_stick_x;
             telemetry.addData("Reverse?",drive.getReverse());
             telemetry.update();
-            drive.teleDrive(r,robotAngle,rightX);
 
             if(gamepad1.x){
                 formerX = true;
             }
+            //delete later
+            if(gamepad1.y){
+                r = Math.hypot(gamepad1.left_stick_x,1.0);
+                robotAngle = Math.atan2(1.0, gamepad1.left_stick_x) - Math.PI / 4;
+                rightX = -1*gamepad1.right_stick_x;
 
+            }
+            //delete later
+            if(gamepad1.b){
+                r = Math.hypot(gamepad1.left_stick_x,-1.0);
+                robotAngle = Math.atan2(-1.0, gamepad1.left_stick_x) - Math.PI / 4;
+                rightX = -1*gamepad1.right_stick_x;
+
+            }
             if(formerX){
                 if(!gamepad1.x) {
                     formerX = false;
                     drive.reverse();
                 }
             }
+            drive.teleDrive(r,robotAngle,rightX);
 
 
         }
