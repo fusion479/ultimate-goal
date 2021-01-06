@@ -18,7 +18,6 @@ public class DrivingTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException{
-<<<<<<< HEAD
         frontLeft = hardwareMap.get(DcMotorEx.class,"frontLeft");
         frontRight = hardwareMap.get(DcMotorEx.class,"frontRight");
         backLeft = hardwareMap.get(DcMotorEx.class,"backLeft");
@@ -27,15 +26,9 @@ public class DrivingTest extends LinearOpMode {
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
-=======
         //Remember, parts initialization.
         //Here I'm directly calling the motors since this is only for troubleshooting. Generally you want to write this stuff as a mechanism.
-        frontLeft = hardwareMap.dcMotor.get("frontLeft");
-        frontRight = hardwareMap.dcMotor.get("frontRight");
-        backLeft = hardwareMap.dcMotor.get("backLeft");
-        backRight = hardwareMap.dcMotor.get("backRight");
         //Starting off by resetting the encoders.
->>>>>>> 739493e2ed5296f2646602cf6ad06013de44e80d
         resetEncoders();
         boolean formerB = false;
 
@@ -61,11 +54,8 @@ public class DrivingTest extends LinearOpMode {
                 backRight.setPower(0.0);
 
             }
-<<<<<<< HEAD
 
-=======
             //Important information about the distance the motors traveled.
->>>>>>> 739493e2ed5296f2646602cf6ad06013de44e80d
             telemetry.addData("FL: Encoder value", frontLeft.getCurrentPosition());
             telemetry.addData("FR: Encoder value", frontRight.getCurrentPosition());
             telemetry.addData("BL: Encoder value", backLeft.getCurrentPosition());
