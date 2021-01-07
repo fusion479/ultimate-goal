@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 //We had issues with getting the DT to drive straight, so this code is meant to troubleshoot such issues.
@@ -57,9 +58,17 @@ public class DrivingTest extends LinearOpMode {
 
             //Important information about the distance the motors traveled.
             telemetry.addData("FL: Encoder value", frontLeft.getCurrentPosition());
+            telemetry.addData("FL Angle/Sec: ",frontLeft.getVelocity(AngleUnit.DEGREES));
+
             telemetry.addData("FR: Encoder value", frontRight.getCurrentPosition());
+            telemetry.addData("FR Angle/Sec: ",frontRight.getVelocity(AngleUnit.DEGREES));
+
             telemetry.addData("BL: Encoder value", backLeft.getCurrentPosition());
+            telemetry.addData("BL Angle/Sec: ",backLeft.getVelocity(AngleUnit.DEGREES));
+
             telemetry.addData("BR: Encoder value", backRight.getCurrentPosition());
+            telemetry.addData("BR Angle/Sec: ",backRight.getVelocity(AngleUnit.DEGREES));
+
             telemetry.addData("Forwards?",frontLeft.getDirection() == DcMotorSimple.Direction.FORWARD);
 
             telemetry.update();
