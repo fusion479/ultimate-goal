@@ -31,6 +31,8 @@ public class Flywheel extends Mechanism {
         right.setPower(power);
     }
 
+    //THE FOLLOWING COMMENTED OUT CODE IS NOT CURRENTLY USEFUL
+    /*
     //Mainly used in early stages of flywheel prototyping. The motors run in opposite directions.
     //This code is a bit wack because if the direction is wrong it needs to be adjusted directly here.
     public void runReverse(double power) {
@@ -44,6 +46,8 @@ public class Flywheel extends Mechanism {
         right.setPower(rightPower);
 
     }
+    */
+
 
     //Reverses the direction of the flywheel. This is incompatible with runReverse method.
     public void reverseDirection(boolean forwards) {
@@ -54,5 +58,9 @@ public class Flywheel extends Mechanism {
             left.setDirection(DcMotorSimple.Direction.REVERSE);
             right.setDirection(DcMotorSimple.Direction.REVERSE);
         }
+    }
+
+    public boolean goingForwards(){
+        return left.getDirection().equals(DcMotorSimple.Direction.FORWARD);
     }
 }

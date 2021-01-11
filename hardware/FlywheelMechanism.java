@@ -36,4 +36,8 @@ public class FlywheelMechanism extends Mechanism{
         flywheel.runEqual(power);
     }
 
+    public void off(){
+        flywheel.runEqual(0);
+    }
+
 }
