@@ -33,7 +33,7 @@ public class AcquirerTest extends LinearOpMode {
             }
 
             else if(gamepad1.b){
-                acquirer.intake(1);
+                acquirer.outake(1);
                 backRoller.intake(1);
             }
 
@@ -41,6 +41,7 @@ public class AcquirerTest extends LinearOpMode {
                 acquirer.outake(0);
                 backRoller.intake(0);
             }
+
             double r = Math.hypot(gamepad1.left_stick_x,gamepad1.left_stick_y);
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = -1*gamepad1.right_stick_x;
@@ -64,6 +65,7 @@ public class AcquirerTest extends LinearOpMode {
                 rightX = -1*gamepad1.right_stick_x;
 
             }
+
             if(formerX){
                 if(!gamepad1.x) {
                     formerX = false;

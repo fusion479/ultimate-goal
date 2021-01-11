@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.hardware.FlywheelServo;
 import org.firstinspires.ftc.teamcode.DelayCommand;
 //Probably should be named something else but too far in to change it. Code for prototyping the flywheel.
 @TeleOp
-public class Prototype extends LinearOpMode {
+public class FlywheelTest extends LinearOpMode {
     private Flywheel flywheel = new Flywheel();
     private FlywheelServo flywheelServo = new FlywheelServo();
 
