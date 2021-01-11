@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 public class DrivingTest extends LinearOpMode {
 
     private DcMotorEx frontLeft, frontRight, backLeft, backRight;
-    private double speed = 2795.52;
+    private double speed = 2795.52 * 0.9;
 
     @Override
     public void runOpMode() throws InterruptedException{
