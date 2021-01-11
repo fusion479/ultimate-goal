@@ -31,4 +31,9 @@ public class FlywheelMechanism extends Mechanism{
         }
     }
 
+    //Overloading run command incase this is a desired method
+    public void run(double power){
+        flywheel.runEqual(power);
+    }
+
 }
