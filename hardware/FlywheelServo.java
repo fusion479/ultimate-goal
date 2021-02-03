@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.DelayCommand;
 public class FlywheelServo extends Mechanism {
     private Servo flickServo;
     //Delay will be used in flick
-    private DelayCommand delay;
+    private DelayCommand delay = new DelayCommand();
 
     //Classic init method. The startPos() is to ensure servo is in correct starting position.
     public void init(HardwareMap hwMap){
@@ -19,12 +19,12 @@ public class FlywheelServo extends Mechanism {
 
     //This is to be adjusted for the "real" starting position. 0.0 position and actual starting position may differ.
     public void startPos(){
-        flickServo.setPosition(1.0);
+        flickServo.setPosition(0.6);
     }
 
     //This is to be adjusted for the "real" ending.
     public void endPos(){
-        flickServo.setPosition(0.5);
+        flickServo.setPosition(0.9);
     }
 
     //Methods to explicitly change to the 0 and 1 states of the servos.
@@ -74,9 +74,7 @@ public class FlywheelServo extends Mechanism {
             }};
 
         //sends servo to desired position
-        startPos();
-        delay.delay(end,100);
-        //sends servo back to start position
+        endPos();
         delay.delay(start,150);
     }
 

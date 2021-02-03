@@ -7,11 +7,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.hardware.Flywheel;
 import org.firstinspires.ftc.teamcode.hardware.FlywheelServo;
 import org.firstinspires.ftc.teamcode.DelayCommand;
+import org.firstinspires.ftc.teamcode.hardware.Linkage;
+
 //Probably should be named something else but too far in to change it. Code for prototyping the flywheel.
 @TeleOp
 public class FlywheelTest extends LinearOpMode {
     private Flywheel flywheel = new Flywheel();
     private FlywheelServo flywheelServo = new FlywheelServo();
+    private Linkage linkage = new Linkage();
 
 
     @Override
@@ -25,8 +28,11 @@ public class FlywheelTest extends LinearOpMode {
         boolean formerA = false;
         boolean formerB = false;
         boolean formerY = false;
+        boolean formerRBump = false;
+        boolean formerLBump = false;
         flywheel.init(hardwareMap);
         flywheelServo.init(hardwareMap);
+        linkage.init(hardwareMap);
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Status", "Waiting in init");
             telemetry.update();
@@ -40,7 +46,7 @@ public class FlywheelTest extends LinearOpMode {
             telemetry.addData("Direction Forwards?", forwards);
             telemetry.addData("The speedState is ",speedState);
             telemetry.addData("Servo POS ", flywheelServo.currentPos());
-
+            telemetry.addData("Linkage POS",linkage.position());
             telemetry.update();
 
             //Changes the speed state between 3 modes
@@ -113,6 +119,26 @@ public class FlywheelTest extends LinearOpMode {
                 if(!gamepad1.y){
                     flywheelServo.flick();
                     formerY = false;
+                }
+            }
+
+            if(gamepad1.right_bumper){
+                formerRBump = true;
+            }
+            if(formerRBump){
+                if(!gamepad1.right_bumper){
+                    linkage.toggle();
+                    formerRBump = false;
+                }
+            }
+
+            if(gamepad1.left_bumper){
+                formerLBump = true;
+            }
+            if(formerLBump){
+                if(!gamepad1.left_bumper){
+                    linkage.subtractPos();
+                    formerLBump = false;
                 }
             }
 

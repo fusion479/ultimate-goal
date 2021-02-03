@@ -11,6 +11,8 @@ public class Flywheel extends Mechanism {
     private DcMotor right;
     private double leftSpeed;
     private double rightSpeed;
+    private boolean running = false;
+    public double speed = 1.0;
     //just initializing the motors for use in flywheel
     public void init(HardwareMap hwMap) {
         left = hwMap.dcMotor.get("left");
@@ -19,8 +21,8 @@ public class Flywheel extends Mechanism {
         right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        left.setDirection(DcMotorSimple.Direction.FORWARD);
-        right.setDirection(DcMotorSimple.Direction.FORWARD);
+        left.setDirection(DcMotorSimple.Direction.REVERSE);
+        right.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
     }
@@ -63,4 +65,23 @@ public class Flywheel extends Mechanism {
     public boolean goingForwards(){
         return left.getDirection().equals(DcMotorSimple.Direction.FORWARD);
     }
+
+    public void toggle(){
+        if(!running){
+            runEqual(speed);
+        }
+
+        else{
+            runEqual(0.0);
+        }
+
+        running = !running;
+    }
+
+    public boolean running(){
+        return running;
+    }
+
+
+
 }
