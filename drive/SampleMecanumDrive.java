@@ -80,7 +80,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         FOLLOW_TRAJECTORY
     }
 
-    //private FtcDashboard dashboard;
+    private FtcDashboard dashboard;
     private NanoClock clock;
 
     private Mode mode;
@@ -106,8 +106,8 @@ public class SampleMecanumDrive extends MecanumDrive {
     public SampleMecanumDrive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
-        //dashboard = FtcDashboard.getInstance();
-        //dashboard.setTelemetryTransmissionInterval(25);
+        dashboard = FtcDashboard.getInstance();
+        dashboard.setTelemetryTransmissionInterval(25);
 
         clock = NanoClock.system();
 
@@ -283,7 +283,7 @@ public class SampleMecanumDrive extends MecanumDrive {
                 Pose2d newPose = lastPoseOnTurn.copy(lastPoseOnTurn.getX(), lastPoseOnTurn.getY(), targetState.getX());
 
                 fieldOverlay.setStroke("#4CAF50");
-                //DashboardUtil.drawRobot(fieldOverlay, newPose);
+                DashboardUtil.drawRobot(fieldOverlay, newPose);
 
                 if (t >= turnProfile.duration()) {
                     mode = Mode.IDLE;
@@ -299,12 +299,12 @@ public class SampleMecanumDrive extends MecanumDrive {
 
                 fieldOverlay.setStrokeWidth(1);
                 fieldOverlay.setStroke("#4CAF50");
-                //DashboardUtil.drawSampledPath(fieldOverlay, trajectory.getPath());
+                DashboardUtil.drawSampledPath(fieldOverlay, trajectory.getPath());
                 double t = follower.elapsedTime();
-                //DashboardUtil.drawRobot(fieldOverlay, trajectory.get(t));
+                DashboardUtil.drawRobot(fieldOverlay, trajectory.get(t));
 
                 fieldOverlay.setStroke("#3F51B5");
-                //DashboardUtil.drawPoseHistory(fieldOverlay, poseHistory);
+                DashboardUtil.drawPoseHistory(fieldOverlay, poseHistory);
 
                 if (!follower.isFollowing()) {
                     mode = Mode.IDLE;
@@ -316,9 +316,9 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         fieldOverlay.setStroke("#3F51B5");
-        //DashboardUtil.drawRobot(fieldOverlay, currentPose);
+        DashboardUtil.drawRobot(fieldOverlay, currentPose);
 
-        //dashboard.sendTelemetryPacket(packet);
+        dashboard.sendTelemetryPacket(packet);
     }
 
     public void waitForIdle() {
