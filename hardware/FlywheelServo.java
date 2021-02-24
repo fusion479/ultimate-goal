@@ -19,12 +19,12 @@ public class FlywheelServo extends Mechanism {
 
     //This is to be adjusted for the "real" starting position. 0.0 position and actual starting position may differ.
     public void startPos(){
-        flickServo.setPosition(0.6);
+        flickServo.setPosition(0.3);
     }
 
     //This is to be adjusted for the "real" ending.
     public void endPos(){
-        flickServo.setPosition(0.9);
+        flickServo.setPosition(0.6);
     }
 
     //Methods to explicitly change to the 0 and 1 states of the servos.
