@@ -31,12 +31,12 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     public static double WHEEL_RADIUS = 0.69;// in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double LATERAL_DISTANCE = 15.82674; // in; distance between the left and right wheels
+    public static double LATERAL_DISTANCE = 15.715; // in; distance between the left and right wheels
     public static double FORWARD_OFFSET = 0.15; // in; offset of the lateral wheel
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
-    public static double X_MULTIPLIER =  1.0245; // Multiplier in the X direction
-    public static double Y_MULTIPLIER =  1.0215; // Multiplier in the Y direction
+    public static double X_MULTIPLIER =1.005215312333163;// Multiplier in the X direction
+    public static double Y_MULTIPLIER =1.01092180664243;// Multiplier in the Y direction
 
     public StandardTrackingWheelLocalizer(HardwareMap hardwareMap) {
         super(Arrays.asList(
@@ -45,13 +45,13 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
                 new Pose2d(FORWARD_OFFSET, 0, Math.toRadians(90)) // front
         ));
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "acquirerM"));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "left"));
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "indexer"));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "indexer"));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "acquirerM"));
+        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backRight"));
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
         leftEncoder.setDirection(Encoder.Direction.REVERSE);
-        rightEncoder.setDirection(Encoder.Direction.FORWARD);
+        rightEncoder.setDirection(Encoder.Direction.REVERSE);
         frontEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
