@@ -16,8 +16,8 @@ public class RingCounter extends OpenCvPipeline {
 
     //ROI stands for region of interest; this defines the area that we are targeting
     static final Rect ROI = new Rect(
-            new Point(60, 100),
-            new Point(120, 220));
+            new Point(0, 0),
+            new Point(320, 240));
 
     //idk some code guide said to do this
     public RingCounter(){
@@ -40,7 +40,7 @@ public class RingCounter extends OpenCvPipeline {
         Saturation is in range 0-255 and Value is in range 0-255 (all INCLUSIVE).
         NORMALLY, HSV is defined like so: Hue in range 0-360, Saturation in range 0.0-1.0 and Value in range 0.0-1.0.
         */
-        Scalar lowHSV = new Scalar(5, 8*255/10, 4*255/10);
+        Scalar lowHSV = new Scalar(5, 100, 50);
         Scalar highHSV = new Scalar(25, 255, 255);
         //This basically sets the thresholds; you all know about min max etc etc
         Core.inRange(workingMatrix, lowHSV, highHSV, workingMatrix);

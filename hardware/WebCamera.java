@@ -44,4 +44,9 @@ public class WebCamera extends Mechanism{
     public double regionValue(){
         return counter.regionValue();
     }
+    public int ringCount(){
+        if(regionValue() > 0.3) return 4;
+        if(regionValue() > 0.1) return 1;
+        return 0;
+    }
 }
