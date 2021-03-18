@@ -52,6 +52,12 @@ public class TrajectoryProto extends LinearOpMode {
                 wobbleMech.unClamp();
             }
         };
+        Runnable raise = new Runnable() {
+            @Override
+            public void run() {
+                wobbleMech.raise();
+            }
+        };
         Runnable clamp = new Runnable() {
             @Override
             public void run() {
@@ -70,6 +76,11 @@ public class TrajectoryProto extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(103, 17, Math.toRadians(45))).
                 addTemporalMarker(1,()-> {
                     wobbleMech.toggleArm();
+                }).
+                addDisplacementMarker(()->{
+                    wobbleMech.unClamp();
+                    delay.delay(raise,400);
+
                 })
                 .build();
         telemetry.addData("Status", "Initialized");
