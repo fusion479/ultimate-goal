@@ -1,60 +1,58 @@
 package org.firstinspires.ftc.teamcode.opMode.protoType;
 
 //Code for playing around with servos. Go on, experiment!
+import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-@TeleOp(name="ServoTest",group="TeleOp")
+
+@Config
+@Autonomous(group = "drive")
 public class ServoTest extends LinearOpMode {
-    private Servo flickServo;
+    private Servo testServoMain;
+    private Servo testServoSupp;
+    public static double START = 0.45;
+    public static double END = 0.95;
+    public static double START2 = 0.6;
+    public static double END2 = 0.1;
+    //Servo Main: START: 0.45; END: 0.95
+    //Servo Supp: START: 0.6; END: 0.1
+    //Clamp Servo: START: 0.1; END: 0.6
     public void init(HardwareMap hwMap){
-        flickServo = hwMap.servo.get("flickServo");
+
+        testServoMain = hwMap.servo.get("1");
+        testServoSupp = hwMap.servo.get("2");
     }
     @Override
     public void runOpMode() throws InterruptedException{
         boolean formerA = false;
         boolean formerB = false;
-        boolean formerX = false;
-        while(!opModeIsActive() && !isStopRequested()){
-            telemetry.addData("Status", "Waiting in init");
-            telemetry.update();
-        }
         init(hardwareMap);
-        while(opModeIsActive()){
+        waitForStart();
+        while(opModeIsActive()&& !isStopRequested()){
             if(gamepad1.a){
                 formerA = true;
             }
-
             if(formerA){
-                if(!gamepad1.a) {
-                    flickServo.setPosition(0.3);
+                if(!gamepad1.a){
                     formerA = false;
-                }
-            }
-
-            if(gamepad1.x){
-                formerX = true;
-            }
-
-            if(formerX){
-                if(!gamepad1.x){
-                    flickServo.setPosition(0.0);
-                    formerX = false;
+                    testServoMain.setPosition(START);
+                    testServoSupp.setPosition(START2);
                 }
             }
 
             if(gamepad1.b){
                 formerB = true;
             }
-
             if(formerB){
-                if(!gamepad1.b) {
-                    flickServo.setPosition(0.99);
+                if(!gamepad1.b){
                     formerB = false;
+                    testServoMain.setPosition(END);
+                    testServoSupp.setPosition(END2);
                 }
             }
-
         }
     }
 }

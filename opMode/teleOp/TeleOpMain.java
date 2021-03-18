@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Flywheel;
 import org.firstinspires.ftc.teamcode.hardware.FlywheelServo;
 import org.firstinspires.ftc.teamcode.hardware.Linkage;
+import org.firstinspires.ftc.teamcode.hardware.WobbleGoal;
 
 @TeleOp(name="TeleOpMain",group="TeleOp")
 public class TeleOpMain extends LinearOpMode {
@@ -16,7 +17,7 @@ public class TeleOpMain extends LinearOpMode {
     private FlywheelServo flywheelServo = new FlywheelServo();
     private Linkage linkage = new Linkage();
     private CompleteIntake intake = new CompleteIntake();
-
+    private WobbleGoal wobble = new WobbleGoal();
     @Override
     public void runOpMode() throws InterruptedException{
         intake.init(hardwareMap);
@@ -24,6 +25,7 @@ public class TeleOpMain extends LinearOpMode {
         linkage.init(hardwareMap);
         flywheel.init(hardwareMap);
         flywheelServo.init(hardwareMap);
+        wobble.init(hardwareMap);
 
         boolean formerLeftClick = false;
         boolean formerRightClick = false;
@@ -31,6 +33,8 @@ public class TeleOpMain extends LinearOpMode {
         boolean formerY = false;
         boolean formerLBump = false;
         boolean formerX = false;
+        boolean formerRBump = false;
+        boolean formerB = false;
         double r, robotAngle, rightX;
         while(!opModeIsActive() && !isStopRequested()){
             telemetry.addData("Status", "Waiting in init");
@@ -42,7 +46,7 @@ public class TeleOpMain extends LinearOpMode {
                 intake.outake(1);
             }
 
-            else if(gamepad1.right_bumper){
+            else if(gamepad1.left_trigger > 0.5){
                 intake.intake(1);
             }
 
@@ -67,6 +71,26 @@ public class TeleOpMain extends LinearOpMode {
                 if(!gamepad1.x) {
                     formerX = false;
                     drive.reverse();
+                }
+            }
+
+            if(gamepad1.b){
+                formerB = true;
+            }
+            if(formerB){
+                if(!gamepad1.b){
+                    wobble.toggleClamp();
+                    formerB = false;
+                }
+            }
+
+            if(gamepad1.right_bumper){
+                formerRBump = true;
+            }
+            if(formerRBump){
+                if(!gamepad1.right_bumper){
+                    wobble.toggleArm();
+                    formerRBump = false;
                 }
             }
 
