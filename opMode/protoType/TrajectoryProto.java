@@ -79,8 +79,20 @@ public class TrajectoryProto extends LinearOpMode {
                 }).
                 addDisplacementMarker(()->{
                     wobbleMech.unClamp();
-                    delay.delay(raise,400);
-
+                })
+                .build();
+        Trajectory afterWobble1 = drive.trajectoryBuilder(fourRings.end()).
+                lineToSplineHeading(new Pose2d(45, -5, Math.toRadians(180)))
+                .splineToConstantHeading(new Vector2d(35,9),0)
+                .addDisplacementMarker(()->{
+                    intake.outake(1);
+                })
+                .build();
+        Trajectory getWobble2 = drive.trajectoryBuilder(afterWobble1.end()).
+                forward(6.5)
+                .addDisplacementMarker(()->{
+                    wobbleMech.clamp();
+                    intake.outake(0);
                 })
                 .build();
         telemetry.addData("Status", "Initialized");
@@ -91,7 +103,8 @@ public class TrajectoryProto extends LinearOpMode {
         drive.followTrajectory(pathInit);
         sleep(startWobbleTrajec);
         drive.followTrajectory(fourRings);
-
+        drive.followTrajectory(afterWobble1);
+        drive.followTrajectory(getWobble2);
         /*Runnable flick = new Runnable() {
             @Override
             public void run() {

@@ -21,6 +21,9 @@ public class CompleteIntake extends  Mechanism{
     }
 
     public void intake(float power){
+        indexerM.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        acquirerM.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         acquirerM.setDirection(DcMotorSimple.Direction.FORWARD);
         acquirerM.setPower(power);
 
@@ -29,6 +32,9 @@ public class CompleteIntake extends  Mechanism{
     }
 
     public void outake(float power){
+        indexerM.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        acquirerM.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         acquirerM.setDirection(DcMotorSimple.Direction.REVERSE);
         acquirerM.setPower(power);
 
