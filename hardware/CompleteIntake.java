@@ -19,13 +19,13 @@ public class CompleteIntake extends  Mechanism{
     }
 
     public void intake(float power){
-        acquirerM.setPower(power);
+        acquirerM.setPower(-power);
         indexerM.setPower(power);
     }
 
     public void outake(float power){
         acquirerM.setPower(power);
-        indexerM.setPower(power);
+        indexerM.setPower(-power);
     }
 
 }

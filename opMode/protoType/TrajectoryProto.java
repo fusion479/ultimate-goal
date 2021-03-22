@@ -67,7 +67,7 @@ public class TrajectoryProto extends LinearOpMode {
         int startFourRings;
         Trajectory pathInit = drive.trajectoryBuilder(startPose)
                 .splineTo(new Vector2d(40,-20),0)
-                .splineToConstantHeading(new Vector2d(54,-3),0).
+                .splineToConstantHeading(new Vector2d(54,0),0).
                 addDisplacementMarker(()->{
                              shoot(4);
                 })
@@ -75,28 +75,62 @@ public class TrajectoryProto extends LinearOpMode {
         Trajectory fourRings = drive.trajectoryBuilder(pathInit.end())
                 .lineToLinearHeading(new Pose2d(103, 17, Math.toRadians(45))).
                 addTemporalMarker(1,()-> {
-                    wobbleMech.toggleArm();
+                    if(wobbleMech.armRaised) wobbleMech.toggleArm();
                 }).
                 addDisplacementMarker(()->{
                     wobbleMech.unClamp();
                 })
                 .build();
         Trajectory afterWobble1 = drive.trajectoryBuilder(fourRings.end()).
-                lineToSplineHeading(new Pose2d(45, -5, Math.toRadians(180)))
-                .splineToConstantHeading(new Vector2d(35,9),0)
+                lineToSplineHeading(new Pose2d(45, 0, Math.toRadians(180)))
                 .addDisplacementMarker(()->{
-                    intake.outake(1);
+                    intake.intake(1);
                 })
                 .build();
+        Trajectory getRings = drive.trajectoryBuilder(afterWobble1.end())
+                .forward(15)
+                .addDisplacementMarker(()->{
+                    intake.intake(0);
+                }).
+                build();
+        Trajectory getWobblePostRings = drive.trajectoryBuilder(getRings.end()).
+                addTemporalMarker(0.3,()->{
+                    //intake.intake(1);
+                }).
+                addTemporalMarker(1,()->{
+                    //intake.intake(0);
+                }).
+                lineToSplineHeading(new Pose2d(24,4,Math.toRadians(152))).
+                addDisplacementMarker(()->{
+                    wobbleMech.clamp();
+                }).
+                build();
+        Trajectory shootPostWobbleRetrieval = drive.trajectoryBuilder(getWobblePostRings.end()).
+                addTemporalMarker(0.3,()->{
+                    intake.intake(1);
+                    delay.delay(toggleShooting,200);
+                }).
+                lineToSplineHeading(new Pose2d(54,0,Math.toRadians(-3))).
+                addDisplacementMarker(()->{
+                    intake.intake(0);
+                    shoot(3);
+                }).
+                build();
         Trajectory getWobble2 = drive.trajectoryBuilder(afterWobble1.end()).
-                forward(6.5)
+                forward(12.5)
                 .addDisplacementMarker(()->{
                     wobbleMech.clamp();
-                    intake.outake(0);
+                }).addTemporalMarker(5,()->{
+                    intake.intake(0);
                 })
                 .build();
+
+        Trajectory endAuton = drive.trajectoryBuilder(shootPostWobbleRetrieval.end()).
+                lineToSplineHeading(new Pose2d(72,12,Math.toRadians(0))).
+                build();
         telemetry.addData("Status", "Initialized");
         waitForStart();
+
 
         if (isStopRequested()) return;
         delay.delay(toggleShooting,1000);
@@ -104,20 +138,12 @@ public class TrajectoryProto extends LinearOpMode {
         sleep(startWobbleTrajec);
         drive.followTrajectory(fourRings);
         drive.followTrajectory(afterWobble1);
-        drive.followTrajectory(getWobble2);
-        /*Runnable flick = new Runnable() {
-            @Override
-            public void run() {
-                flywheelServo.flick();
-            }
-        };
-        int timeOffset = 100;
-        int normalGap = 350;
-        delay.delay(flick,timeOffset);
-        delay.delay(flick,timeOffset+normalGap);
-        delay.delay(flick,timeOffset+normalGap*2);
-        delay.delay(flick,timeOffset+normalGap*3);
-        delay.delay(toggleShooting,timeOffset+normalGap*4);*/
+        drive.followTrajectory(getRings);
+        drive.followTrajectory(getWobblePostRings);
+        drive.followTrajectory(shootPostWobbleRetrieval);
+        sleep(startWobbleTrajec);
+        drive.followTrajectory(fourRings);
+        drive.followTrajectory(endAuton);
 
 
         Pose2d poseEstimate = drive.getPoseEstimate();
