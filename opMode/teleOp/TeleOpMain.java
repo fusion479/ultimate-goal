@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opMode.teleOp;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -7,13 +8,17 @@ import org.firstinspires.ftc.teamcode.hardware.CompleteIntake;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Flywheel;
 import org.firstinspires.ftc.teamcode.hardware.FlywheelServo;
+import org.firstinspires.ftc.teamcode.hardware.FlywheelWEncoders;
 import org.firstinspires.ftc.teamcode.hardware.Linkage;
 import org.firstinspires.ftc.teamcode.hardware.WobbleGoal;
-
+@Config
 @TeleOp(name="TeleOpMain",group="TeleOp")
 public class TeleOpMain extends LinearOpMode {
+    public static double powerSpeed= 1200;
+    //shoot 2-3 inches from line
+    private boolean singleshot = false;
     private Drivetrain drive = new Drivetrain(this);
-    private Flywheel flywheel = new Flywheel();
+    private FlywheelWEncoders flywheel = new FlywheelWEncoders();
     private FlywheelServo flywheelServo = new FlywheelServo();
     private Linkage linkage = new Linkage();
     private CompleteIntake intake = new CompleteIntake();
@@ -35,6 +40,7 @@ public class TeleOpMain extends LinearOpMode {
         boolean formerX = false;
         boolean formerRBump = false;
         boolean formerB = false;
+        boolean formerLStick = false;
         double r, robotAngle, rightX;
         while(!opModeIsActive() && !isStopRequested()){
             telemetry.addData("Status", "Waiting in init");
@@ -58,9 +64,11 @@ public class TeleOpMain extends LinearOpMode {
             robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             rightX = -1*gamepad1.right_stick_x;
             telemetry.addData("Reverse?",drive.getReverse());
-            telemetry.addData("Flywheel Speed:",flywheel.speed);
+            telemetry.addData("Flywheel DesiredSpeed:",flywheel.speed);
+            telemetry.addData("RealSpeed",flywheel.veloc());
             telemetry.addData("left",gamepad1.dpad_left);
             telemetry.addData("right",gamepad1.dpad_right);
+            telemetry.addData("Singleshot?",singleshot);
             telemetry.update();
 
 
@@ -103,13 +111,36 @@ public class TeleOpMain extends LinearOpMode {
                     formerLBump = false;
                 }
             }
-
+            if(gamepad1.left_stick_button){
+                formerLStick = true;
+            }
+            if(formerLStick){
+                if(!gamepad1.left_stick_button){
+                    singleshot = !singleshot;
+                    if(singleshot){
+                        flywheel.speed = powerSpeed;
+                    }
+                    else{
+                        flywheel.speed = 2795.52 * 1.0;
+                    }
+                    formerLStick = false;
+                }
+            }
             if(gamepad1.y){
                 formerY = true;
             }
             if(formerY){
                 if(!gamepad1.y){
-                    if(flywheel.running() && linkage.inAir()){flywheelServo.flick();}
+
+                    if(flywheel.running() && linkage.inAir()){
+                        if(singleshot){
+                            flywheelServo.flick();
+                        }
+                        else{
+                            flywheelServo.burst(3);
+                        }
+
+                    }
                     formerY = false;
                 }
             }

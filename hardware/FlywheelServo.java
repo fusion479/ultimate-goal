@@ -19,13 +19,11 @@ public class FlywheelServo extends Mechanism {
 
     //This is to be adjusted for the "real" starting position. 0.0 position and actual starting position may differ.
     public void startPos(){
-        flickServo.setPosition(0.3);
+        flickServo.setPosition(0.40);
     }
 
     //This is to be adjusted for the "real" ending.
-    public void endPos(){
-        flickServo.setPosition(0.6);
-    }
+    public void endPos(){ flickServo.setPosition(0.65); }
 
     //Methods to explicitly change to the 0 and 1 states of the servos.
     public void zeroPos() {flickServo.setPosition(0.0);}
@@ -34,6 +32,19 @@ public class FlywheelServo extends Mechanism {
     //Accessor method for setting servo position manually, although shouldn't be used too much.
     public void setPosition(double x){
         flickServo.setPosition(x);
+    }
+
+    public void burst(int shoot){
+        Runnable flickR = new Runnable() {
+            @Override
+            public void run() {
+                flick();
+            }
+        };
+        flick();
+        for(int i = 1; i < shoot;i++){
+            delay.delay(flickR,250 * i);
+        }
     }
 
     //The commented out code turns out to be useless. Servo direction is only relevant in the case of a continuous servo.

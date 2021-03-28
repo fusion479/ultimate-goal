@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opMode.protoType;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -14,12 +15,15 @@ import org.firstinspires.ftc.teamcode.hardware.CompleteIntake;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Flywheel;
 import org.firstinspires.ftc.teamcode.hardware.FlywheelServo;
+import org.firstinspires.ftc.teamcode.hardware.FlywheelWEncoders;
 import org.firstinspires.ftc.teamcode.hardware.Linkage;
 import org.firstinspires.ftc.teamcode.hardware.WobbleGoal;
 
 @Autonomous(name="TrajectoryProto")
+@Config
 public class TrajectoryProto extends LinearOpMode {
-    private Flywheel flywheel = new Flywheel();
+    private boolean backyard = true;
+    private FlywheelWEncoders flywheel = new FlywheelWEncoders();
     private FlywheelServo flywheelServo = new FlywheelServo();
     private Linkage linkage = new Linkage();
     private CompleteIntake intake = new CompleteIntake();
@@ -30,11 +34,8 @@ public class TrajectoryProto extends LinearOpMode {
         Runnable toggleShooting = new Runnable() {
             @Override
             public void run() {
-                if(linkage.inAir()) flywheel.runEqual(0);
-                else{
-                    flywheel.runEqual(1);
-                }
                 linkage.toggle();
+                flywheel.toggle();
             }
         };
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -65,9 +66,19 @@ public class TrajectoryProto extends LinearOpMode {
             }
         };
         int startFourRings;
-        Trajectory pathInit = drive.trajectoryBuilder(startPose)
+        int offsetPathInit = 0;
+
+        if(backyard){
+            offsetPathInit = 3;
+        }
+
+        Trajectory pathInit = drive.trajectoryBuilder(startPose).
+                addTemporalMarker(0.5,()->{
+                    flywheel.toggle();
+                    linkage.toggle();
+                })
                 .splineTo(new Vector2d(40,-20),0)
-                .splineToConstantHeading(new Vector2d(54,0),0).
+                .splineToConstantHeading(new Vector2d(54+offsetPathInit,0),0).
                 addDisplacementMarker(()->{
                              shoot(4);
                 })
@@ -89,7 +100,7 @@ public class TrajectoryProto extends LinearOpMode {
                 .build();
         Trajectory getRings = drive.trajectoryBuilder(afterWobble1.end())
                 .forward(15)
-                .addDisplacementMarker(()->{
+                .addTemporalMarker(2,()->{
                     intake.intake(0);
                 }).
                 build();
@@ -108,7 +119,8 @@ public class TrajectoryProto extends LinearOpMode {
         Trajectory shootPostWobbleRetrieval = drive.trajectoryBuilder(getWobblePostRings.end()).
                 addTemporalMarker(0.3,()->{
                     intake.intake(1);
-                    delay.delay(toggleShooting,200);
+                    flywheel.toggle();
+                    linkage.toggle();
                 }).
                 lineToSplineHeading(new Pose2d(54,0,Math.toRadians(-3))).
                 addDisplacementMarker(()->{
@@ -133,7 +145,6 @@ public class TrajectoryProto extends LinearOpMode {
 
 
         if (isStopRequested()) return;
-        delay.delay(toggleShooting,1000);
         drive.followTrajectory(pathInit);
         sleep(startWobbleTrajec);
         drive.followTrajectory(fourRings);
