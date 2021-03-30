@@ -14,12 +14,12 @@ public class Intake extends Mechanism {
         roller1.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
-    public void runInward(float trigger) {
+    public void runInward(double trigger) {
         roller1.setDirection(DcMotorSimple.Direction.FORWARD);
         roller1.setPower(trigger);
     }
 
-    public void runOutward(float trigger) {
+    public void runOutward(double trigger) {
         roller1.setDirection(DcMotorSimple.Direction.REVERSE);
         roller1.setPower(trigger);
     }

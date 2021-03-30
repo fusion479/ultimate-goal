@@ -21,7 +21,7 @@ public class WobbleGoal extends Mechanism{
         armServoMain = hwMap.servo.get("armMain");
         armServoSupp = hwMap.servo.get("armSupp");
         clampServo = hwMap.servo.get("clampServo");
-        clamp();
+        clampServo.setPosition(0.2);
         Runnable raiseRun = new Runnable() {
             @Override
             public void run() {
@@ -31,12 +31,16 @@ public class WobbleGoal extends Mechanism{
         delay.delay(raiseRun,1000);
     }
 
+
     public void clamp(){
-        clampServo.setPosition(0.6);
+        clampServo.setPosition(0.3);
         clamped = true;
     }
+    public void onetime(){
+        clampServo.setPosition(0.0);
+    }
     public void unClamp(){
-        clampServo.setPosition(0.1);
+        clampServo.setPosition(0.7);
         clamped = false;
     }
 

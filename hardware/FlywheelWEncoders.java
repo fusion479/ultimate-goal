@@ -9,8 +9,10 @@ public class FlywheelWEncoders extends Mechanism{
     private DcMotorEx left;
     private DcMotorEx right;
     private boolean running = false;
-    public double speed = 2795.52 * 1.0;
+    public double speed = 1400;//2795.52 * 1.0;
     private double defaultSpeed = 1.0;
+    public static  double p1 = 1.7808;
+    public static double p2 = 1.7953;
     //just initializing the motors for use in flywheel
     public void init(HardwareMap hwMap) {
         left = hwMap.get(DcMotorEx.class,"left");
@@ -21,6 +23,9 @@ public class FlywheelWEncoders extends Mechanism{
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         left.setDirection(DcMotorSimple.Direction.REVERSE);
         right.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        right.setVelocityPIDFCoefficients(p2,p2*0.1,0,p2*10);
+        left.setVelocityPIDFCoefficients(p1,p1*0.1,0,p1*10);
 
 
     }

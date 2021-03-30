@@ -18,12 +18,12 @@ public class CompleteIntake extends  Mechanism{
         indexerM.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void intake(float power){
+    public void intake(double power){
         acquirerM.setPower(-power);
         indexerM.setPower(power);
     }
 
-    public void outake(float power){
+    public void outake(double power){
         acquirerM.setPower(power);
         indexerM.setPower(-power);
     }
