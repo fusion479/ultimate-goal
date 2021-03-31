@@ -9,8 +9,9 @@ public class FlywheelWEncoders extends Mechanism{
     private DcMotorEx left;
     private DcMotorEx right;
     private boolean running = false;
-    public double speed = 1400;//2795.52 * 1.0;
-    private double defaultSpeed = 1.0;
+    public double speed = 1400;
+    public double power = 0.55;
+
     public static  double p1 = 1.7808;
     public static double p2 = 1.7953;
     //just initializing the motors for use in flywheel
@@ -29,13 +30,19 @@ public class FlywheelWEncoders extends Mechanism{
 
 
     }
+    /*
     public void runEqual(double input){
         left.setVelocity(input * speed);
         right.setVelocity(input * speed);
     }
+     */
+    public void runEqual(double input){
+        left.setPower(input);
+        right.setPower(input);
+    }
     public void toggle(){
         if(!running){
-            runEqual(1.0);
+            runEqual(power);
         }
 
         else{
