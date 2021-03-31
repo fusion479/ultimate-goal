@@ -194,7 +194,7 @@ public class AprilAuton extends LinearOpMode {
                     flywheel.toggle();
                     linkage.toggle();
                 }).
-                lineToSplineHeading(new Pose2d(56, 0, Math.toRadians(-3))).
+                lineToSplineHeading(new Pose2d(56, 0, Math.toRadians(0))).
                 addDisplacementMarker(() -> {
                     intake.intake(0);
                     flywheelServo.burst(3);
