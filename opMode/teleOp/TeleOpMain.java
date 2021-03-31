@@ -49,6 +49,7 @@ public class TeleOpMain extends LinearOpMode {
         }
 //why doesnt my code work
         while(opModeIsActive()){
+            //ADD flywheelpidf.update()
             if(gamepad1.right_trigger > 0.5) {
                 intake.intake(1);
             }
