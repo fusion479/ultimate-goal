@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opMode.protoType;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -13,14 +13,17 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.hardware.TuningController;
+import org.firstinspires.ftc.teamcode.hardware.VelocityPIDFController;
+
 @Config
 @TeleOp
 public class LinkedMotorTuner extends LinearOpMode {
     public static PIDCoefficients MOTOR_VELO_PID = new PIDCoefficients(0, 0, 0);
 
-    public static double kV = 1 / TuningController.rpmToTicksPerSecond(TuningController.MOTOR_MAX_RPM);
-    public static double kA = 0;
-    public static double kStatic = 0;
+    public static double kV = 0.0015;
+    public static double kA = 0.0009;
+    public static double kStatic = 0.0005;
 
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
 
@@ -33,8 +36,8 @@ public class LinkedMotorTuner extends LinearOpMode {
         DcMotorEx right = hardwareMap.get(DcMotorEx.class, "right");
 
         // Reverse as appropriate
-        // myMotor1.setDirection(DcMotorSimple.Direction.REVERSE);
-        // myMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
+         left.setDirection(DcMotorSimple.Direction.REVERSE);
+         right.setDirection(DcMotorSimple.Direction.REVERSE);
 
         left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -75,12 +78,12 @@ public class LinkedMotorTuner extends LinearOpMode {
 
             telemetry.addData("targetVelocity", targetVelo);
 
-            double motorPos = myMotor1.getCurrentPosition();
-            double motorVelo = myMotor1.getVelocity();
+            double motorPos = left.getCurrentPosition();
+            double motorVelo = left.getVelocity();
 
             double power = veloController.update(motorPos, motorVelo);
-            myMotor1.setPower(power);
-            myMotor2.setPower(power);
+            left.setPower(power);
+            right.setPower(power);
 
             if(lastKv != kV || lastKa != kA || lastKstatic != kStatic) {
                 lastKv = kV;

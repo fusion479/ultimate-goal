@@ -1,5 +1,4 @@
-package org.firstinspires.ftc.teamcode;
-
+package org.firstinspires.ftc.teamcode.hardware;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -8,7 +7,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.hardware.Mechanism;
+
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 
 public class FlywheelPIDF extends Mechanism {
@@ -24,7 +29,8 @@ public class FlywheelPIDF extends Mechanism {
     // Necessary for kA to have an affect
     private final ElapsedTime veloTimer = new ElapsedTime();
     private double lastTargetVelo = 0.0;
-
+    DcMotorEx left;
+    DcMotorEx right;
     // Our velocity controller
     private final VelocityPIDFController veloController = new VelocityPIDFController(MOTOR_VELO_PID, kV, kA, kStatic);
     private boolean running = false;
@@ -33,8 +39,8 @@ public class FlywheelPIDF extends Mechanism {
     private double targetVelo = TuningController.rpmToTicksPerSecond(3000.0);
 
     public void init (HardwareMap hwMap){
-        DcMotorEx left = hwMap.get(DcMotorEx.class, "left");
-        DcMotorEx right = hwMap.get(DcMotorEx.class, "right");
+        left = hwMap.get(DcMotorEx.class, "left");
+        right = hwMap.get(DcMotorEx.class, "right");
 
         // Reverse as appropriate
         left.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -59,8 +65,8 @@ public class FlywheelPIDF extends Mechanism {
         lastTargetVelo = targetVelo;
 
         // Get the velocity from the motor with the encoder
-        double motorPos = myMotor1.getCurrentPosition();
-        double motorVelo = myMotor1.getVelocity();
+        double motorPos = left.getCurrentPosition();
+        double motorVelo = left.getVelocity();
 
         // Update the controller and set the power for each motor
         double power = veloController.update(motorPos, motorVelo);

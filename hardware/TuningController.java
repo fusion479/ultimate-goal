@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.noahbres.jotai.StateMachine;
@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Config
 public class TuningController {
     public static double MOTOR_TICKS_PER_REV = 28.0;
-    public static double MOTOR_MAX_RPM = 5800.0;
-    public static double MOTOR_GEAR_RATIO = 1.5; // output (wheel) speed / input (motor) speed
+    public static double MOTOR_MAX_RPM = 4000;
+    public static double MOTOR_GEAR_RATIO = 2/3.0; // output (wheel) speed / input (motor) speed
 
     public static double TESTING_MAX_SPEED = 0.9 * MOTOR_MAX_RPM;
     public static double TESTING_MIN_SPEED = 0.3 * MOTOR_MAX_RPM;
