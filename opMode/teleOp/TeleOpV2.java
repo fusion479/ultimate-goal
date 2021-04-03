@@ -93,6 +93,7 @@ public class TeleOpV2 extends LinearOpMode {
             else{
                 intake.outake(0);
             }
+            if(!drive.isBusy())
             drive.setWeightedDrivePower(
                     new Pose2d(
                             -gamepad1.left_stick_y,
@@ -100,6 +101,7 @@ public class TeleOpV2 extends LinearOpMode {
                             -gamepad1.right_stick_x
                     )
             );
+            
 
             drive.update();
             telemetry.addData("Flywheel DesiredSpeed:",flywheel.speed);
