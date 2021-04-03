@@ -23,7 +23,7 @@ public class FlywheelPIDF extends Mechanism {
     // Copy your feedforward gains here
     public static double kV = 0.0006;
     public static double kA = 0.00065;
-    public static double kStatic = 0.0002;
+    public static double kStatic = 0.002;
 
     // Timer for calculating desired acceleration
     // Necessary for kA to have an affect
@@ -103,12 +103,13 @@ public class FlywheelPIDF extends Mechanism {
     }
     public void toggle(){
         if(!running){
-            targetVelo = 0;
+            targetVelo = TuningController.rpmToTicksPerSecond(3000);
             update();
         }
 
         else{
-            targetVelo = TuningController.rpmToTicksPerSecond(1000);
+            targetVelo = TuningController.rpmToTicksPerSecond(0);
+            update();
         }
 
         running = !running;

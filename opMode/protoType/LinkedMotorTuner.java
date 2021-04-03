@@ -23,7 +23,7 @@ public class LinkedMotorTuner extends LinearOpMode {
 
     public static double kV = 0.0006;
     public static double kA = 0.00065;
-    public static double kStatic = 0.0002;
+    public static double kStatic = 0.002;
 
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
 

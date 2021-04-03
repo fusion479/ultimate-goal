@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.hardware.WobbleGoal;
 @TeleOp(name="TeleOpMain",group="TeleOp")
 public class TeleOpMain extends LinearOpMode {
     public static double powerSpeed= 1200;
-    public static double highSpeed = TuningController.rpmToTicksPerSecond(1400);
+    public static double highSpeed = TuningController.rpmToTicksPerSecond(3000);
     //shoot 2-3 inches from line
     private boolean singleshot = false;
     private Drivetrain drive = new Drivetrain(this);
@@ -115,6 +115,7 @@ public class TeleOpMain extends LinearOpMode {
                     formerLBump = false;
                 }
             }
+
             if(gamepad1.left_stick_button){
                 formerLStick = true;
             }
