@@ -18,12 +18,12 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
 public class FlywheelPIDF extends Mechanism {
     // Copy your PID Coefficients here
-    public static PIDCoefficients MOTOR_VELO_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients MOTOR_VELO_PID = new PIDCoefficients(0.0002, 0, 0);
 
     // Copy your feedforward gains here
-    public static double kV = 1 / TuningController.rpmToTicksPerSecond(TuningController.MOTOR_MAX_RPM);
-    public static double kA = 0;
-    public static double kStatic = 0;
+    public static double kV = 0.0006;
+    public static double kA = 0.00065;
+    public static double kStatic = 0.0002;
 
     // Timer for calculating desired acceleration
     // Necessary for kA to have an affect
@@ -36,7 +36,7 @@ public class FlywheelPIDF extends Mechanism {
     private boolean running = false;
 
     //CHANGE TARGETVELO
-    private double targetVelo = TuningController.rpmToTicksPerSecond(3000.0);
+    public double targetVelo = 0;
 
     public void init (HardwareMap hwMap){
         left = hwMap.get(DcMotorEx.class, "left");
@@ -51,7 +51,7 @@ public class FlywheelPIDF extends Mechanism {
         right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Turns on bulk reading
-        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+        for (LynxModule module : hwMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
     }
@@ -100,5 +100,17 @@ public class FlywheelPIDF extends Mechanism {
     }
     public double veloc(){
         return left.getVelocity();
+    }
+    public void toggle(){
+        if(!running){
+            targetVelo = 0;
+            update();
+        }
+
+        else{
+            targetVelo = TuningController.rpmToTicksPerSecond(1000);
+        }
+
+        running = !running;
     }
 }

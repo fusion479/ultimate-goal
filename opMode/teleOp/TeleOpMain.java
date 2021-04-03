@@ -7,19 +7,21 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.hardware.CompleteIntake;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Flywheel;
+import org.firstinspires.ftc.teamcode.hardware.FlywheelPIDF;
 import org.firstinspires.ftc.teamcode.hardware.FlywheelServo;
 import org.firstinspires.ftc.teamcode.hardware.FlywheelWEncoders;
 import org.firstinspires.ftc.teamcode.hardware.Linkage;
+import org.firstinspires.ftc.teamcode.hardware.TuningController;
 import org.firstinspires.ftc.teamcode.hardware.WobbleGoal;
 @Config
 @TeleOp(name="TeleOpMain",group="TeleOp")
 public class TeleOpMain extends LinearOpMode {
     public static double powerSpeed= 1200;
-    public static double highSpeed = 1400;
+    public static double highSpeed = TuningController.rpmToTicksPerSecond(1400);
     //shoot 2-3 inches from line
     private boolean singleshot = false;
     private Drivetrain drive = new Drivetrain(this);
-    private FlywheelWEncoders flywheel = new FlywheelWEncoders();
+    private FlywheelPIDF flywheel = new FlywheelPIDF();
     private FlywheelServo flywheelServo = new FlywheelServo();
     private Linkage linkage = new Linkage();
     private CompleteIntake intake = new CompleteIntake();
@@ -66,7 +68,7 @@ public class TeleOpMain extends LinearOpMode {
             robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             rightX = -1*gamepad1.right_stick_x;
             telemetry.addData("Reverse?",drive.getReverse());
-            telemetry.addData("Flywheel DesiredSpeed:",flywheel.speed);
+            telemetry.addData("Flywheel DesiredSpeed:",flywheel.targetVelo);
             telemetry.addData("RealSpeed",flywheel.veloc());
             telemetry.addData("left",gamepad1.dpad_left);
             telemetry.addData("right",gamepad1.dpad_right);
@@ -120,10 +122,10 @@ public class TeleOpMain extends LinearOpMode {
                 if(!gamepad1.left_stick_button){
                     singleshot = !singleshot;
                     if(singleshot){
-                        flywheel.speed = powerSpeed;
+                        flywheel.targetVelo = powerSpeed;
                     }
                     else{
-                        flywheel.speed = highSpeed;
+                        flywheel.targetVelo = highSpeed;
                     }
                     formerLStick = false;
                 }
@@ -159,24 +161,6 @@ public class TeleOpMain extends LinearOpMode {
 
             if(gamepad1.dpad_left){
                 formerLeftClick = true;
-            }
-
-            if(formerLeftClick){
-                if(!gamepad1.dpad_left){
-                    flywheel.speed -= 0.05;
-                    formerLeftClick = false;
-                }
-            }
-
-            if(gamepad1.dpad_right){
-                formerRightClick = true;
-            }
-
-            if(formerRightClick){
-                if(!gamepad1.dpad_right){
-                    flywheel.speed += 0.05;
-                    formerRightClick = false;
-                }
             }
 
             drive.teleDrive(r,robotAngle,rightX);

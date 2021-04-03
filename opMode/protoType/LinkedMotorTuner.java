@@ -19,11 +19,11 @@ import org.firstinspires.ftc.teamcode.hardware.VelocityPIDFController;
 @Config
 @TeleOp
 public class LinkedMotorTuner extends LinearOpMode {
-    public static PIDCoefficients MOTOR_VELO_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients MOTOR_VELO_PID = new PIDCoefficients(0.0002, 0, 0);
 
-    public static double kV = 0.0015;
-    public static double kA = 0.0009;
-    public static double kStatic = 0.0005;
+    public static double kV = 0.0006;
+    public static double kA = 0.00065;
+    public static double kStatic = 0.0002;
 
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
 
