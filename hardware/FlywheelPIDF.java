@@ -103,7 +103,7 @@ public class FlywheelPIDF extends Mechanism {
     }
     public void toggle(){
         if(!running){
-            targetVelo = TuningController.rpmToTicksPerSecond(3000);
+            targetVelo = 1100;
             update();
         }
 

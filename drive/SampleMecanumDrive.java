@@ -408,4 +408,8 @@ public class SampleMecanumDrive extends MecanumDrive {
         //return imu.getAngularOrientation().firstAngle; //getting rid of imu
         return 0;
     }
+
+    public void cancelFollowing() {
+        mode = Mode.IDLE;
+    }
 }

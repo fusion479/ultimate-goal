@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode.opMode.teleOp;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.CompleteIntake;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Flywheel;
@@ -12,26 +16,28 @@ import org.firstinspires.ftc.teamcode.hardware.FlywheelWEncoders;
 import org.firstinspires.ftc.teamcode.hardware.Linkage;
 import org.firstinspires.ftc.teamcode.hardware.WobbleGoal;
 @Config
-@TeleOp(name="TeleOpMain",group="TeleOp")
-public class TeleOpMain extends LinearOpMode {
+@TeleOp(name="TeleOpV2",group="TeleOp")
+public class TeleOpV2 extends LinearOpMode {
     public static double powerSpeed= 1200;
     public static double highSpeed = 1400;
     //shoot 2-3 inches from line
     private boolean singleshot = false;
-    private Drivetrain drive = new Drivetrain(this);
     private FlywheelWEncoders flywheel = new FlywheelWEncoders();
     private FlywheelServo flywheelServo = new FlywheelServo();
     private Linkage linkage = new Linkage();
     private CompleteIntake intake = new CompleteIntake();
     private WobbleGoal wobble = new WobbleGoal();
+    private Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
     @Override
     public void runOpMode() throws InterruptedException{
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intake.init(hardwareMap);
-        drive.init(hardwareMap);
         linkage.init(hardwareMap);
         flywheel.init(hardwareMap);
         flywheelServo.init(hardwareMap);
         wobble.init(hardwareMap);
+
 
         boolean formerLeftClick = false;
         boolean formerRightClick = false;
@@ -42,6 +48,7 @@ public class TeleOpMain extends LinearOpMode {
         boolean formerRBump = false;
         boolean formerB = false;
         boolean formerLStick = false;
+        boolean formerRStick = false;
         double r, robotAngle, rightX;
         while(!opModeIsActive() && !isStopRequested()){
             telemetry.addData("Status", "Waiting in init");
@@ -49,6 +56,31 @@ public class TeleOpMain extends LinearOpMode {
         }
 //why doesnt my code work
         while(opModeIsActive()){
+            Trajectory shootStance;
+            if(gamepad1.right_stick_button){
+                formerRStick = true;
+            }
+
+            if(formerRStick){
+
+                if(!gamepad1.right_stick_button){
+                    drive.cancelFollowing();
+                    startPose = drive.getPoseEstimate();
+                    formerRStick = false;
+                }
+            }
+            if(gamepad1.x){
+                formerX = true;
+            }
+            if(formerX){
+                if(!gamepad1.x){
+                    shootStance = drive.trajectoryBuilder(drive.getPoseEstimate()).
+                            lineToLinearHeading(startPose).
+                            build();
+                    formerX = false;
+                    drive.followTrajectoryAsync(shootStance);
+                }
+            }
             //ADD flywheelpidf.update()
             if(gamepad1.right_trigger > 0.5) {
                 intake.intake(1);
@@ -61,11 +93,15 @@ public class TeleOpMain extends LinearOpMode {
             else{
                 intake.outake(0);
             }
+            drive.setWeightedDrivePower(
+                    new Pose2d(
+                            -gamepad1.left_stick_y,
+                            -gamepad1.left_stick_x,
+                            -gamepad1.right_stick_x
+                    )
+            );
 
-            r = Math.hypot(gamepad1.left_stick_x,gamepad1.left_stick_y);
-            robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-            rightX = -1*gamepad1.right_stick_x;
-            telemetry.addData("Reverse?",drive.getReverse());
+            drive.update();
             telemetry.addData("Flywheel DesiredSpeed:",flywheel.speed);
             telemetry.addData("RealSpeed",flywheel.veloc());
             telemetry.addData("left",gamepad1.dpad_left);
@@ -74,16 +110,7 @@ public class TeleOpMain extends LinearOpMode {
             telemetry.update();
 
 
-            if(gamepad1.x){
-                formerX = true;
-            }
-            if(formerX){
-                if(!gamepad1.x) {
-                    formerX = false;
-                    drive.reverse();
-                }
-            }
-
+            drive.update();
             if(gamepad1.b){
                 formerB = true;
             }
@@ -167,20 +194,6 @@ public class TeleOpMain extends LinearOpMode {
                     formerLeftClick = false;
                 }
             }
-
-            if(gamepad1.dpad_right){
-                formerRightClick = true;
-            }
-
-            if(formerRightClick){
-                if(!gamepad1.dpad_right){
-                    flywheel.speed += 0.05;
-                    formerRightClick = false;
-                }
-            }
-
-            drive.teleDrive(r,robotAngle,rightX);
-
 
         }
     }

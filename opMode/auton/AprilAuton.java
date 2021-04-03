@@ -201,7 +201,7 @@ public class AprilAuton extends LinearOpMode {
                 }).
                 build();
         Trajectory wobble2Retrieval = drive.trajectoryBuilder(shootPostRingRetrieval.end())
-                .lineToSplineHeading(new Pose2d(22, 5, Math.toRadians(180 - 12)))
+                .lineToSplineHeading(new Pose2d(28, 5, Math.toRadians(180-5)))
                 .addDisplacementMarker(() -> {
                     wobbleMech.unClamp();
                     wobbleMech.lower();
