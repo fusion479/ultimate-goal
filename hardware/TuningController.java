@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Config
 public class TuningController {
     public static double MOTOR_TICKS_PER_REV = 28.0;
-    public static double MOTOR_MAX_RPM = 3000;
-    public static double MOTOR_GEAR_RATIO = 1.0; // output (wheel) speed / input (motor) speed
+    public static double MOTOR_MAX_RPM = 6000;
+    public static double MOTOR_GEAR_RATIO = 1.5; // output (wheel) speed / input (motor) speed
 
     public static double TESTING_MAX_SPEED = 0.9 * MOTOR_MAX_RPM;
     public static double TESTING_MIN_SPEED = 0.3 * MOTOR_MAX_RPM;

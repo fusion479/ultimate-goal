@@ -12,6 +12,7 @@ public class ReleaseTest extends LinearOpMode {
         Release release = new Release();
         release.init(hardwareMap);
         boolean formerA = false;
+        boolean formerL = false;
         while(!opModeIsActive() && !isStopRequested()){
             telemetry.addData("Status", "Waiting in init");
             telemetry.update();
@@ -27,6 +28,20 @@ public class ReleaseTest extends LinearOpMode {
                     release.release();
                 }
             }
+            if(gamepad1.left_bumper){
+                formerL = true;
+            }
+            if(formerL){
+                if(!gamepad1.left_bumper){
+                    formerL = false;
+                    release.retract();
+                }
+            }
+            if(gamepad1.b){
+                release.releaseServo.setPosition(1.0);
+            }
+            if(gamepad1.x)release.releaseServo.setPosition(0.0);
+            if(gamepad1.y)release.releaseServo.setPosition(0.5);
         }
     }
 }

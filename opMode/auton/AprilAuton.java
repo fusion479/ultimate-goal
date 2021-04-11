@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.hardware.CompleteIntake;
 import org.firstinspires.ftc.teamcode.hardware.FlywheelServo;
 import org.firstinspires.ftc.teamcode.hardware.FlywheelWEncoders;
 import org.firstinspires.ftc.teamcode.hardware.Linkage;
+import org.firstinspires.ftc.teamcode.hardware.Release;
 import org.firstinspires.ftc.teamcode.hardware.WebCamera;
 import org.firstinspires.ftc.teamcode.hardware.WobbleGoal;
 @Autonomous
@@ -26,6 +27,7 @@ public class AprilAuton extends LinearOpMode {
     private WobbleGoal wobbleMech = new WobbleGoal();
     private int startWobbleTrajec = 0;
     private WebCamera camera = new WebCamera();
+    private Release release = new Release();
     public void runOpMode() throws InterruptedException {
         Runnable toggleShooting = new Runnable() {
             @Override
@@ -42,7 +44,7 @@ public class AprilAuton extends LinearOpMode {
         flywheelServo.init(hardwareMap);
         wobbleMech.init(hardwareMap);
         camera.init(hardwareMap);
-
+        release.init(hardwareMap);
         Pose2d startPose = new Pose2d(0, -12, Math.toRadians(0));
         drive.setPoseEstimate(startPose);
         int mode = 0;
@@ -52,8 +54,9 @@ public class AprilAuton extends LinearOpMode {
                     linkage.toggle();
                 })
                 .splineTo(new Vector2d(40, -20), 0)
-                .splineToConstantHeading(new Vector2d(56, 0), 0).
+                .splineToConstantHeading(new Vector2d(56, 3), 0).
                         addDisplacementMarker(() -> {
+                            sleep(1000);
                             flywheelServo.burst(3);
                             camera.setPipeline();
                             telemetry.addData("Flywheel Velocity", flywheel.veloc());
@@ -62,7 +65,7 @@ public class AprilAuton extends LinearOpMode {
                 .build();
 
         Trajectory fourRings = drive.trajectoryBuilder(pathInit.end())
-                .lineToLinearHeading(new Pose2d(103, 17, Math.toRadians(45))).
+                .lineToLinearHeading(new Pose2d(103, 20, Math.toRadians(45))).
                         addTemporalMarker(1, () -> {
                             if (wobbleMech.armRaised) wobbleMech.toggleArm();
                         }).
@@ -115,7 +118,7 @@ public class AprilAuton extends LinearOpMode {
                 .lineTo(new Vector2d(72,-20))
                 .build();
         Trajectory oneRing = drive.trajectoryBuilder(pathInit.end())
-                .forward(26).
+                .forward(30).
                         addTemporalMarker(0.3, () -> {
                             if (wobbleMech.armRaised) wobbleMech.toggleArm();
                         }).
@@ -197,11 +200,12 @@ public class AprilAuton extends LinearOpMode {
                 lineToSplineHeading(new Pose2d(56, 0, Math.toRadians(0))).
                 addDisplacementMarker(() -> {
                     intake.intake(0);
+                    sleep(1000);
                     flywheelServo.burst(3);
                 }).
                 build();
         Trajectory wobble2Retrieval = drive.trajectoryBuilder(shootPostRingRetrieval.end())
-                .lineToSplineHeading(new Pose2d(28, 5, Math.toRadians(180-5)))
+                .lineToSplineHeading(new Pose2d(28, 8, Math.toRadians(180-5)))
                 .addDisplacementMarker(() -> {
                     wobbleMech.unClamp();
                     wobbleMech.lower();
@@ -216,7 +220,7 @@ public class AprilAuton extends LinearOpMode {
                 })
                 .build();
         Trajectory oneRingDupe = drive.trajectoryBuilder(wobble2Retrieval.end()).
-                lineToLinearHeading(new Pose2d(82,0,Math.toRadians(0))).
+                lineToLinearHeading(new Pose2d(86,0,Math.toRadians(0))).
                 addDisplacementMarker(()->{
                     wobbleMech.unClamp();
                 }).
@@ -224,9 +228,11 @@ public class AprilAuton extends LinearOpMode {
         Trajectory endAutonOne = drive.trajectoryBuilder(oneRingDupe.end()).
                 lineTo(new Vector2d(72, 0)).
                 build();
-
-        Trajectory fourRingsDupe = drive.trajectoryBuilder(wobble2Retrieval.end())
-                .lineToLinearHeading(new Pose2d(103, 17, Math.toRadians(45))).
+        Trajectory fourRingsDupeInit = drive.trajectoryBuilder(wobble2Retrieval.end()).
+                lineTo(new Vector2d(103,0)).
+                build();
+        Trajectory fourRingsDupe = drive.trajectoryBuilder(fourRingsDupeInit.end())
+                .lineToLinearHeading(new Pose2d(103, 20, Math.toRadians(45))).
                         addTemporalMarker(1, () -> {
                             if (wobbleMech.armRaised) wobbleMech.toggleArm();
                         }).
@@ -242,13 +248,13 @@ public class AprilAuton extends LinearOpMode {
 
 
         if (isStopRequested()) return;
-
+        release.release();
         drive.followTrajectory(pathInit);
         mode = camera.ringCount();
         telemetry.addData("Count",mode);
         telemetry.addData("Count2",camera.ringCount());
         telemetry.update();
-        sleep(2000);
+        sleep(2700);
         flywheel.toggle();
         linkage.toggle();
         if(mode == 4) {
@@ -258,11 +264,12 @@ public class AprilAuton extends LinearOpMode {
             drive.followTrajectory(getRingsV4);
             sleep(1000);
             drive.followTrajectory(shootPostRingRetrieval);
-            sleep(2000);
+            sleep(2800);
             linkage.toggle();
             flywheel.toggle();
             drive.followTrajectory(wobble2Retrieval);
             sleep(2000);
+            drive.followTrajectory(fourRingsDupeInit);
             drive.followTrajectory(fourRingsDupe);
             drive.followTrajectory(endAuton);
         }
@@ -272,7 +279,7 @@ public class AprilAuton extends LinearOpMode {
             drive.followTrajectory(afterWobble1OneRing);
             drive.followTrajectory(getRingsOne);
             drive.followTrajectory(shootPostRingRetrieval);
-            sleep(2000);
+            sleep(2800);
             linkage.toggle();
             flywheel.toggle();
             intake.intake(0);

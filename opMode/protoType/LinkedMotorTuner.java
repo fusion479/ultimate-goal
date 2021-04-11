@@ -19,11 +19,11 @@ import org.firstinspires.ftc.teamcode.hardware.VelocityPIDFController;
 @Config
 @TeleOp
 public class LinkedMotorTuner extends LinearOpMode {
-    public static PIDCoefficients MOTOR_VELO_PID = new PIDCoefficients(0.0002, 0, 0);
+    public static PIDCoefficients MOTOR_VELO_PID = new PIDCoefficients(0.0007, 0.0002, 0.0003);
 
-    public static double kV = 0.0006;
-    public static double kA = 0.00065;
-    public static double kStatic = 0.002;
+    public static double kV = 0.00054;
+    public static double kA = 0.00055;
+    public static double kStatic = 0.00002;
 
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
 
@@ -80,6 +80,8 @@ public class LinkedMotorTuner extends LinearOpMode {
 
             double motorPos = left.getCurrentPosition();
             double motorVelo = left.getVelocity();
+            double motorVelo2 = right.getVelocity();
+
 
             double power = veloController.update(motorPos, motorVelo);
             left.setPower(power);
@@ -93,7 +95,9 @@ public class LinkedMotorTuner extends LinearOpMode {
                 veloController = new VelocityPIDFController(MOTOR_VELO_PID, kV, kA, kStatic);
             }
 
-            telemetry.addData("velocity", motorVelo);
+            telemetry.addData("velocity1", motorVelo);
+            telemetry.addData("velocity2", motorVelo2);
+
             telemetry.addData("error", targetVelo - motorVelo);
 
             telemetry.addData("upperBound", TuningController.rpmToTicksPerSecond(TuningController.TESTING_MAX_SPEED * 1.15));

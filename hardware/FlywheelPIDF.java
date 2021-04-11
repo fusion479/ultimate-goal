@@ -18,25 +18,24 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
 public class FlywheelPIDF extends Mechanism {
     // Copy your PID Coefficients here
-    public static PIDCoefficients MOTOR_VELO_PID = new PIDCoefficients(0.0002, 0, 0);
+    public static PIDCoefficients MOTOR_VELO_PID = new PIDCoefficients(0.0007, 0.0002, 0.0003);
 
     // Copy your feedforward gains here
-    public static double kV = 0.0006;
-    public static double kA = 0.00065;
-    public static double kStatic = 0.002;
+    public static double kV = 0.00054;
+    public static double kA = 0.00055;
+    public static double kStatic = 0.00002;
 
     // Timer for calculating desired acceleration
     // Necessary for kA to have an affect
     private final ElapsedTime veloTimer = new ElapsedTime();
     private double lastTargetVelo = 0.0;
+
     DcMotorEx left;
     DcMotorEx right;
     // Our velocity controller
     private final VelocityPIDFController veloController = new VelocityPIDFController(MOTOR_VELO_PID, kV, kA, kStatic);
     private boolean running = false;
-
-    //CHANGE TARGETVELO
-    public double targetVelo = 0;
+    public double targetVelo =0;
 
     public void init (HardwareMap hwMap){
         left = hwMap.get(DcMotorEx.class, "left");
@@ -92,24 +91,22 @@ public class FlywheelPIDF extends Mechanism {
 //
 //        running = !running;
 //    }
-    public void setVelo(double newVelo){
-        targetVelo = newVelo;
-    }
     public boolean running(){
         return running;
     }
     public double veloc(){
         return left.getVelocity();
     }
+    public void setTargetVelo(double newVelo){
+        targetVelo = newVelo;
+    }
     public void toggle(){
         if(!running){
-            targetVelo = 1100;
-            update();
+            setTargetVelo(1450.0);
         }
 
         else{
-            targetVelo = TuningController.rpmToTicksPerSecond(0);
-            update();
+            setTargetVelo(0.0);
         }
 
         running = !running;
