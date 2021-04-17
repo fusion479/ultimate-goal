@@ -100,9 +100,9 @@ public class FlywheelPIDF extends Mechanism {
     public void setTargetVelo(double newVelo){
         targetVelo = newVelo;
     }
-    public void toggle(){
+    public void toggle(double speed){
         if(!running){
-            setTargetVelo(1450.0);
+            setTargetVelo(speed);
         }
 
         else{

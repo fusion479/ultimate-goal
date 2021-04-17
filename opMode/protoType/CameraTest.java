@@ -4,10 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.PhoneCamera;
+import org.firstinspires.ftc.teamcode.hardware.WebCamera;
+
 //Code to test the camera and it's ability to distinguish the color of the rings.
 @TeleOp(name = "CameraTest",group="TeleOp")
 public class CameraTest extends LinearOpMode {
-    private PhoneCamera camera = new PhoneCamera();
+    private WebCamera camera = new WebCamera();
 
     //private OpenCvCamera phoneCam;
     @Override
@@ -25,7 +27,6 @@ public class CameraTest extends LinearOpMode {
             }
             if(formerA){
                 if(!gamepad1.a){
-                    camera.flash();
                     formerA = false;
                 }
             }

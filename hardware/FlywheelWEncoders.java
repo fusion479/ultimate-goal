@@ -11,7 +11,7 @@ public class FlywheelWEncoders extends Mechanism{
     private DcMotorEx right;
     private boolean running = false;
     public double speed = 1100;
-    public static double power = 0.5;
+    public static double power = 0.1;
 
     public static  double p1 = 1.7808;
     public static double p2 = 1.7953;

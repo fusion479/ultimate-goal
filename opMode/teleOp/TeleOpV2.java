@@ -16,6 +16,8 @@ import org.firstinspires.ftc.teamcode.hardware.FlywheelServo;
 import org.firstinspires.ftc.teamcode.hardware.FlywheelWEncoders;
 import org.firstinspires.ftc.teamcode.hardware.Linkage;
 import org.firstinspires.ftc.teamcode.hardware.WobbleGoal;
+import org.firstinspires.ftc.teamcode.hardware.WobbleGoalV2;
+
 @Config
 @TeleOp(name="TeleOpV2",group="TeleOp")
 public class TeleOpV2 extends LinearOpMode {
@@ -27,7 +29,7 @@ public class TeleOpV2 extends LinearOpMode {
     private FlywheelServo flywheelServo = new FlywheelServo();
     private Linkage linkage = new Linkage();
     private CompleteIntake intake = new CompleteIntake();
-    private WobbleGoal wobble = new WobbleGoal();
+    private WobbleGoalV2 wobble = new WobbleGoalV2();
     private Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
     @Override
     public void runOpMode() throws InterruptedException{
@@ -139,7 +141,7 @@ public class TeleOpV2 extends LinearOpMode {
             }
             if(formerLBump){
                 if(!gamepad1.left_bumper){
-                    flywheel.toggle();
+                    flywheel.toggle(highSpeed);
                     formerLBump = false;
                 }
             }
