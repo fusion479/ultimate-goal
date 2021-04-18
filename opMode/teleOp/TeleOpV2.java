@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.hardware.WobbleGoalV2;
 @TeleOp(name="TeleOpV2",group="TeleOp")
 public class TeleOpV2 extends LinearOpMode {
     public static double powerSpeed= 1200;
-    public static double highSpeed = 1450.0;
+    public static double highSpeed = 1360;
     //shoot 2-3 inches from line
     private boolean singleshot = false;
     private FlywheelPIDF flywheel = new FlywheelPIDF();
@@ -33,6 +33,11 @@ public class TeleOpV2 extends LinearOpMode {
     private Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
     @Override
     public void runOpMode() throws InterruptedException{
+        Pose2d controls = new Pose2d(
+                -gamepad1.left_stick_y,
+                -gamepad1.left_stick_x,
+                -gamepad1.right_stick_x
+        );
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intake.init(hardwareMap);
@@ -40,8 +45,8 @@ public class TeleOpV2 extends LinearOpMode {
         flywheel.init(hardwareMap);
         flywheelServo.init(hardwareMap);
         wobble.init(hardwareMap);
-
-
+        drive.setFlywheel(flywheel);
+        boolean toggleWobble = false;
         boolean formerLeftClick = false;
         boolean formerRightClick = false;
         boolean formerA = false;
@@ -95,18 +100,35 @@ public class TeleOpV2 extends LinearOpMode {
             else{
                 intake.outake(0);
             }
+            controls = new Pose2d(
+                    -gamepad1.left_stick_y,
+                    -gamepad1.left_stick_x,
+                    -gamepad1.right_stick_x
+            );
+            /*
+            if(!toggleWobble){
+                controls = new Pose2d(
+                        -gamepad1.left_stick_y,
+                        -gamepad1.left_stick_x,
+                        -gamepad1.right_stick_x
+                );
+            }
+            else{
+                controls = new Pose2d(
+                        -gamepad1.left_stick_x,
+                       gamepad1.left_stick_y,
+                        -gamepad1.right_stick_x
+                );
+            }
+
+             */
             if(!drive.isBusy())
             drive.setWeightedDrivePower(
-                    new Pose2d(
-                            -gamepad1.left_stick_y,
-                            -gamepad1.left_stick_x,
-                            -gamepad1.right_stick_x
-                    )
+                    controls
             );
             
 
             drive.update();
-            flywheel.update();
             telemetry.addData("DesiredSpeed:",highSpeed);
             telemetry.addData("RealSpeed",flywheel.veloc());
             telemetry.addData("left",gamepad1.dpad_left);
@@ -114,8 +136,6 @@ public class TeleOpV2 extends LinearOpMode {
             telemetry.addData("Singleshot?",singleshot);
             telemetry.update();
 
-
-            drive.update();
             if(gamepad1.b){
                 formerB = true;
             }
@@ -150,13 +170,7 @@ public class TeleOpV2 extends LinearOpMode {
             }
             if(formerLStick){
                 if(!gamepad1.left_stick_button){
-                    singleshot = !singleshot;
-                    if(singleshot){
-                        flywheel.setTargetVelo(highSpeed);
-                    }
-                    else{
-                        flywheel.setTargetVelo(highSpeed);
-                    }
+                    toggleWobble = !toggleWobble;
                     formerLStick = false;
                 }
             }
@@ -198,6 +212,7 @@ public class TeleOpV2 extends LinearOpMode {
                     formerLeftClick = false;
                 }
             }
+
 
         }
     }

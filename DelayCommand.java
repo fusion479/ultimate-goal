@@ -1,8 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class DelayCommand {
 
@@ -21,5 +27,21 @@ public class DelayCommand {
 
     public void delay(Runnable event, int delay){
         executorService.schedule(event, delay, TimeUnit.MILLISECONDS);
+    }
+
+    public void loop(Runnable event, int rate, LinearOpMode opMode){
+
+        final ScheduledFuture<?> beeperHandle =
+                executorService.scheduleAtFixedRate(event, 0, rate, TimeUnit.MILLISECONDS);
+        Runnable end = new Runnable() {
+            @Override
+            public void run() {
+                if(!opMode.opModeIsActive()){
+                    beeperHandle.cancel(true);
+                }
+            }
+        };
+        final ScheduledFuture<?> cancelhandle =
+                executorService.scheduleAtFixedRate(event, 0, rate, TimeUnit.MILLISECONDS);
     }
 }

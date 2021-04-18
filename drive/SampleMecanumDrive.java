@@ -36,6 +36,8 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.teamcode.hardware.Flywheel;
+import org.firstinspires.ftc.teamcode.hardware.FlywheelPIDF;
 import org.firstinspires.ftc.teamcode.util.AxesSigns;
 import org.firstinspires.ftc.teamcode.util.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
@@ -63,6 +65,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
+    FlywheelPIDF x;
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(10, 0, 2);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(12, 0, 0);
 
@@ -238,6 +241,9 @@ public class SampleMecanumDrive extends MecanumDrive {
     }
 
     public void update() {
+        if(x != null){
+            x.update();
+        }
         updatePoseEstimate();
 
         Pose2d currentPose = getPoseEstimate();
@@ -355,7 +361,7 @@ public class SampleMecanumDrive extends MecanumDrive {
             motor.setPIDFCoefficients(runMode, compensatedCoefficients);
         }
     }
-
+    public void setFlywheel(FlywheelPIDF flywheel) {x = flywheel;}
     public void setWeightedDrivePower(Pose2d drivePower) {
         Pose2d vel = drivePower;
 

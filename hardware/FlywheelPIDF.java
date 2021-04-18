@@ -18,12 +18,12 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
 public class FlywheelPIDF extends Mechanism {
     // Copy your PID Coefficients here
-    public static PIDCoefficients MOTOR_VELO_PID = new PIDCoefficients(0.0007, 0.0002, 0.0003);
+    public static PIDCoefficients MOTOR_VELO_PID = new PIDCoefficients(0.0007, 0.0001, 0.0003);
 
     // Copy your feedforward gains here
-    public static double kV = 0.00054;
-    public static double kA = 0.00055;
-    public static double kStatic = 0.00002;
+    public static double kV = 0.00050;
+    public static double kA = 0.00025;
+    public static double kStatic = 0.00000;
 
     // Timer for calculating desired acceleration
     // Necessary for kA to have an affect

@@ -47,7 +47,7 @@ public class FlywheelServo extends Mechanism {
                 delay.delay(flickR, 250 * i);
             }
             else{
-                delay.delay(flickR, 250 * i + 200);
+                delay.delay(flickR, 250 * i + 50);
             }
         }
     }

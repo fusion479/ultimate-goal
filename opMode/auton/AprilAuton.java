@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.hardware.WobbleGoalV2;
 @Autonomous
 public class AprilAuton extends LinearOpMode {
     private boolean backyard = false;
-    private FlywheelWEncoders flywheel = new FlywheelWEncoders();
+    private FlywheelPIDF flywheel = new FlywheelPIDF();
     private FlywheelServo flywheelServo = new FlywheelServo();
     private Linkage linkage = new Linkage();
     private CompleteIntake intake = new CompleteIntake();
@@ -31,12 +31,13 @@ public class AprilAuton extends LinearOpMode {
     private int startWobbleTrajec = 0;
     private WebCamera camera = new WebCamera();
     private Release release = new Release();
+    int speed = 1360;
     public void runOpMode() throws InterruptedException {
         Runnable toggleShooting = new Runnable() {
             @Override
             public void run() {
                 linkage.toggle();
-                flywheel.toggle();
+                flywheel.toggle(speed);
             }
         };
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -44,20 +45,22 @@ public class AprilAuton extends LinearOpMode {
         intake.init(hardwareMap);
         linkage.init(hardwareMap);
         flywheel.init(hardwareMap);
+
         flywheelServo.init(hardwareMap);
         wobbleMech.init(hardwareMap);
         camera.init(hardwareMap);
         release.init(hardwareMap);
+        drive.setFlywheel(flywheel);
         Pose2d startPose = new Pose2d(0, -12, Math.toRadians(0));
         drive.setPoseEstimate(startPose);
         int mode = 0;
         Trajectory pathInit = drive.trajectoryBuilder(startPose).
                 addTemporalMarker(0, () -> {
-                    flywheel.toggle();
+                    flywheel.toggle(speed);
                     linkage.toggle();
                 })
                 .splineTo(new Vector2d(40, -20), 0)
-                .splineToConstantHeading(new Vector2d(56, 3), 0).
+                .splineToConstantHeading(new Vector2d(56, 0), 0).
                         addDisplacementMarker(() -> {
                             flywheelServo.burst(3);
                             camera.setPipeline();
@@ -67,7 +70,7 @@ public class AprilAuton extends LinearOpMode {
                 .build();
 
         Trajectory fourRings = drive.trajectoryBuilder(pathInit.end())
-                .lineToLinearHeading(new Pose2d(108, 20, Math.toRadians(135))).
+                .lineToLinearHeading(new Pose2d(114, 20, Math.toRadians(135))).
                         addTemporalMarker(1, () -> {
                             if (wobbleMech.armRaised) wobbleMech.toggleArm();
                         }).
@@ -75,19 +78,13 @@ public class AprilAuton extends LinearOpMode {
                             wobbleMech.toggleClamp();
                         })
                 .build();
-        Trajectory zeroRing = drive.trajectoryBuilder(pathInit.end()).
-                strafeLeft(24).
-                addDisplacementMarker(()->{
-                    Runnable temp = new Runnable() {
-                        @Override
-                        public void run() {
-                            wobbleMech.toggleClamp();
-                        }
-                    };
+        Trajectory zeroRing = drive.trajectoryBuilder(pathInit.end())
+                .lineToLinearHeading(new Pose2d(70,10,Math.toRadians(180)))
+                .addDisplacementMarker(()->{
+                    wobbleMech.unClamp();
                     wobbleMech.lower();
-                    delay.delay(temp,600);
-                }).
-                build();
+                })
+                .build();
         Trajectory wobble2RetrievalDupe = drive.trajectoryBuilder(zeroRing.end())
                 .addDisplacementMarker(()->{
                     wobbleMech.unClamp();
@@ -106,19 +103,7 @@ public class AprilAuton extends LinearOpMode {
                 })
                 .build();
 
-        Trajectory zeroRingDupe = drive.trajectoryBuilder(wobble2RetrievalDupe.end())
-                .lineToLinearHeading(new Pose2d(72,8,Math.toRadians(180)))
-                .addDisplacementMarker(()->{
-                    wobbleMech.unClamp();
-                    wobbleMech.raise();
-                })
-                .build();
-        Trajectory backup = drive.trajectoryBuilder(zeroRingDupe.end()).
-                back(10).
-                build();
-        Trajectory endAutonZero = drive.trajectoryBuilder(backup.end())
-                .lineTo(new Vector2d(72,-20))
-                .build();
+
         Trajectory oneRing = drive.trajectoryBuilder(pathInit.end())
                 .lineTo(new Vector2d(93,18)).
                         addTemporalMarker(0.3, () -> {
@@ -130,7 +115,7 @@ public class AprilAuton extends LinearOpMode {
                         })
                 .build();
         Trajectory afterWobble1OneRing = drive.trajectoryBuilder(oneRing.end()).
-                lineToLinearHeading(new Pose2d(48, -5, Math.toRadians(180)))
+                lineToLinearHeading(new Pose2d(48, -3, Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
                     intake.intake(0.8);
                     wobbleMech.unClamp();
@@ -196,7 +181,7 @@ public class AprilAuton extends LinearOpMode {
         Trajectory shootPostRingRetrieval = drive.trajectoryBuilder(getRingsV4.end()).
                 addTemporalMarker(0.5, () -> {
                     intake.outake(1);
-                    flywheel.toggle();
+                    flywheel.toggle(speed);
                     linkage.toggle();
                 }).
                 lineToSplineHeading(new Pose2d(56, 0, Math.toRadians(0))).
@@ -226,6 +211,23 @@ public class AprilAuton extends LinearOpMode {
                     wobbleMech.lower();
                 })
                 .build();
+
+        Trajectory wobble2RetrievalZero = drive.trajectoryBuilder(zeroRing.end())
+                .lineToConstantHeading(new Vector2d(13.5, -10))
+
+                .addDisplacementMarker(() -> {
+                    wobbleMech.unClamp();
+                    Runnable temp = new Runnable() {
+                        @Override
+                        public void run() {
+                            wobbleMech.clamp();
+                        }
+                    };
+                    delay.delay(temp, 3000);
+
+                })
+                .build();
+
         Trajectory wobble2RetrievalTurnOne = drive.trajectoryBuilder(wobble2Retrieval.end())
                 .lineToSplineHeading(new Pose2d(15,4.0,Math.toRadians(180)))
                 .addDisplacementMarker(()->{
@@ -233,11 +235,21 @@ public class AprilAuton extends LinearOpMode {
                 })
                 .build();
 
-        Trajectory oneRingDupe = drive.trajectoryBuilder(wobble2RetrievalTurn.end()).
-                lineToLinearHeading(new Pose2d(93,-24,Math.toRadians(165))).
+        Trajectory oneRingsPrep = drive.trajectoryBuilder(wobble2RetrievalTurn.end())
+                .lineTo(new Vector2d(93,-30))
+                .build();
+
+        Trajectory oneRingDupe = drive.trajectoryBuilder(oneRingsPrep.end()).
+                lineToLinearHeading(new Pose2d(98,-18,Math.toRadians(165))).
                 addDisplacementMarker(()->{
                     wobbleMech.unClamp();
-                    wobbleMech.toggleArm();
+                    Runnable run = new Runnable() {
+                        @Override
+                        public void run() {
+                            wobbleMech.toggleArm();
+                        }
+                    };
+                    delay.delay(run,400);
                 }).
                 build();
 
@@ -256,6 +268,20 @@ public class AprilAuton extends LinearOpMode {
                             wobbleMech.unClamp();
                         })
                 .build();
+
+        Trajectory zeroRingDupe = drive.trajectoryBuilder(wobble2RetrievalTurn.end())
+                .lineToLinearHeading(new Pose2d(75,10,Math.toRadians(180)))
+                .addDisplacementMarker(()->{
+                    wobbleMech.unClamp();
+                    wobbleMech.raise();
+                })
+                .build();
+        Trajectory backup = drive.trajectoryBuilder(zeroRingDupe.end()).
+                back(10).
+                build();
+        Trajectory endAutonZero = drive.trajectoryBuilder(backup.end())
+                .lineTo(new Vector2d(72,-20))
+                .build();
         Trajectory endAuton = drive.trajectoryBuilder(fourRingsDupe.end()).
                 lineTo(new Vector2d(72, 0)).
                 build();
@@ -264,6 +290,7 @@ public class AprilAuton extends LinearOpMode {
 
 
         if (isStopRequested()) return;
+
         release.release();
         drive.followTrajectory(pathInit);
         mode = camera.ringCount();
@@ -271,7 +298,7 @@ public class AprilAuton extends LinearOpMode {
         telemetry.addData("Count2",camera.ringCount());
         telemetry.update();
         sleep(1500);
-        flywheel.toggle();
+        flywheel.toggle(0);
         linkage.toggle();
         if(mode == 4) {
             drive.followTrajectory(fourRings);
@@ -282,7 +309,7 @@ public class AprilAuton extends LinearOpMode {
             drive.followTrajectory(shootPostRingRetrieval);
             sleep(2800);
             linkage.toggle();
-            flywheel.toggle();
+            flywheel.toggle(0);
             drive.followTrajectory(wobble2Retrieval);
             drive.followTrajectory(wobble2RetrievalTurn);
             sleep(2000);
@@ -298,11 +325,12 @@ public class AprilAuton extends LinearOpMode {
             drive.followTrajectory(shootPostRingRetrieval);
             sleep(2800);
             linkage.toggle();
-            flywheel.toggle();
+            flywheel.toggle(0);
             intake.intake(0);
             drive.followTrajectory(wobble2Retrieval);
             drive.followTrajectory(wobble2RetrievalTurn);
             sleep(2000);
+            drive.followTrajectory(oneRingsPrep);
             drive.followTrajectory(oneRingDupe);
             drive.followTrajectory(endAutonOne);
         }
@@ -310,7 +338,8 @@ public class AprilAuton extends LinearOpMode {
             drive.followTrajectory(zeroRing);
             sleep(2000);
             wobbleMech.raise();
-            drive.followTrajectory(wobble2RetrievalDupe);
+            drive.followTrajectory(wobble2RetrievalZero);
+            drive.followTrajectory(wobble2RetrievalTurn);
             sleep(2000);
             drive.followTrajectory(zeroRingDupe);
             drive.followTrajectory(backup);
