@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.hardware.WobbleGoalV2;
 public class TeleOpV2 extends LinearOpMode {
     public static double powerSpeed= 1200;
     public static double highSpeed = 1360;
+    public static int inches = 3;
     //shoot 2-3 inches from line
     private boolean singleshot = false;
     private FlywheelPIDF flywheel = new FlywheelPIDF();
@@ -47,7 +48,7 @@ public class TeleOpV2 extends LinearOpMode {
         wobble.init(hardwareMap);
         drive.setFlywheel(flywheel);
         boolean toggleWobble = false;
-        boolean formerLeftClick = false;
+        boolean formerLeftDpad = false;
         boolean formerRightClick = false;
         boolean formerA = false;
         boolean formerY = false;
@@ -57,6 +58,7 @@ public class TeleOpV2 extends LinearOpMode {
         boolean formerB = false;
         boolean formerLStick = false;
         boolean formerRStick = false;
+        boolean formerRightDpad = false;
         double r, robotAngle, rightX;
         while(!opModeIsActive() && !isStopRequested()){
             telemetry.addData("Status", "Waiting in init");
@@ -204,16 +206,40 @@ public class TeleOpV2 extends LinearOpMode {
             }
 
             if(gamepad1.dpad_left){
-                formerLeftClick = true;
+                formerLeftDpad = true;
             }
 
-            if(formerLeftClick){
-                if(!gamepad1.dpad_left){
-                    formerLeftClick = false;
+            if(!gamepad1.dpad_left){
+                if(formerLeftDpad){
+                    formerLeftDpad = false;
+                    singleshot = true;
+                    flywheel.toggle(powerSpeed);
+                    move3inches(drive);
+
+                }
+            }
+
+            if(gamepad1.dpad_right){
+                formerRightDpad = true;
+            }
+
+            if(formerRightDpad){
+                if(!gamepad1.dpad_right){
+                    formerRightDpad = false;
+                    singleshot = false;
+                    flywheel.toggle(highSpeed);
                 }
             }
 
 
+
         }
+    }
+
+    public void move3inches(SampleMecanumDrive drive){
+        Trajectory pen15size = drive.trajectoryBuilder(new Pose2d(0,0,Math.toRadians(0)))
+                .strafeRight(inches)
+                .build();
+        drive.followTrajectory(pen15size);
     }
 }
