@@ -237,9 +237,9 @@ public class TeleOpV2 extends LinearOpMode {
     }
 
     public void move3inches(SampleMecanumDrive drive){
-        Trajectory pen15size = drive.trajectoryBuilder(new Pose2d(0,0,Math.toRadians(0)))
+        Trajectory pen15size = drive.trajectoryBuilder(drive.getPoseEstimate())
                 .strafeRight(inches)
                 .build();
-        drive.followTrajectory(pen15size);
+        drive.followTrajectoryAsync(pen15size);
     }
 }
