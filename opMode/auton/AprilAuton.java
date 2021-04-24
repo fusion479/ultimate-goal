@@ -102,16 +102,16 @@ public class AprilAuton extends LinearOpMode {
                 .addDisplacementMarker(()->{
                     wobbleMech.clamp();
                     intake.intake(1);
-                    flywheel.toggle(speed + 30);
+                    flywheel.toggle(speed);
                 })
                 .build();
 
         Trajectory getRings = drive.trajectoryBuilder(getWobble.end())
                 .addDisplacementMarker(1, () -> {
-                    delay.delay(toggleLinkage,1000);
+                    delay.delay(toggleLinkage,2000);
                 })
                 .forward(26,
-                        SampleMecanumDrive.getVelocityConstraint(7, DriveConstants.MAX_ANG_VEL,
+                        SampleMecanumDrive.getVelocityConstraint(25.2, DriveConstants.MAX_ANG_VEL,
                                 DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive
                                 .getAccelerationConstraint(DriveConstants.MAX_ACCEL))
