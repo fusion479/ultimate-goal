@@ -98,11 +98,11 @@ public class AprilAuton extends LinearOpMode {
                 .addDisplacementMarker(()->{
                     wobbleMech.lower();
                 })
-                .strafeRight(20)
+                .strafeRight(19)
                 .addDisplacementMarker(()->{
                     wobbleMech.clamp();
                     intake.intake(1);
-                    flywheel.toggle(speed);
+                    flywheel.toggle(speed+30);
                 })
                 .build();
 
@@ -118,7 +118,7 @@ public class AprilAuton extends LinearOpMode {
                 .addDisplacementMarker(()->{
                     linkage.toggle();
                 })
-                .lineToLinearHeading(new Pose2d(57,1.5))
+                .lineToLinearHeading(new Pose2d(57,3))
                 .addDisplacementMarker(()->{
                     intake.intake(0);
                 })
@@ -383,9 +383,11 @@ public class AprilAuton extends LinearOpMode {
             drive.followTrajectory(reset);
             drive.followTrajectory(getWobble);
             drive.followTrajectory(getRings);
+            sleep(750);
+            intake.intake(0);
             linkage.toggle();
             sleep(1000);
-            flywheelServo.burst(3);
+            flywheelServo.burst(2);
             sleep(800);
             linkage.toggle();
             drive.followTrajectory(getLast);
