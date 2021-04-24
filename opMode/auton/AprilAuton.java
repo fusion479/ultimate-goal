@@ -105,14 +105,13 @@ public class AprilAuton extends LinearOpMode {
                 .build();
 
         Trajectory getRings = drive.trajectoryBuilder(getWobble.end())
-                .forward(29)
-                .addDisplacementMarker(4,()->{
+                .forward(26)
+                .addDisplacementMarker(1,()->{
                     flywheel.toggle(speed);
                 })
                 .build();
         Trajectory shootRings = drive.trajectoryBuilder(getRings.end())
                 .addDisplacementMarker(()->{
-                    intake.outake(1);
                     linkage.toggle();
                 })
                 .lineToLinearHeading(new Pose2d(57,1.5))
