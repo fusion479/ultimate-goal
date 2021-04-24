@@ -13,6 +13,8 @@ public class WobbleGoalV2 extends Mechanism{
     public boolean clamped = true;
     public static double armServoMainZERO = 0.4;
     public static double armServoMainONE = 0.0;
+    public static double clamp = 0.2;
+    public static double unclamped = 0.7;
     private DelayCommand delay = new DelayCommand();
 
     public void init(HardwareMap hwMap){
@@ -30,14 +32,14 @@ public class WobbleGoalV2 extends Mechanism{
 
 
     public void clamp(){
-        clampServo.setPosition(0.3);
+        clampServo.setPosition(clamp);
         clamped = true;
     }
     public void onetime(){
         clampServo.setPosition(0.0);
     }
     public void unClamp(){
-        clampServo.setPosition(0.7);
+        clampServo.setPosition(unclamped);
         clamped = false;
     }
 

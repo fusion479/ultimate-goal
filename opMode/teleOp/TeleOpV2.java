@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.Bumper;
 import org.firstinspires.ftc.teamcode.hardware.CompleteIntake;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Flywheel;
@@ -21,9 +22,10 @@ import org.firstinspires.ftc.teamcode.hardware.WobbleGoalV2;
 @Config
 @TeleOp(name="TeleOpV2",group="TeleOp")
 public class TeleOpV2 extends LinearOpMode {
-    public static double powerSpeed= 1200;
+    public static double speed = 1360;
+    public static double powerSpeed= 1150;
     public static double highSpeed = 1360;
-    public static int inches = 3;
+    public static double inches = 7.5;
     //shoot 2-3 inches from line
     private boolean singleshot = false;
     private FlywheelPIDF flywheel = new FlywheelPIDF();
@@ -31,6 +33,7 @@ public class TeleOpV2 extends LinearOpMode {
     private Linkage linkage = new Linkage();
     private CompleteIntake intake = new CompleteIntake();
     private WobbleGoalV2 wobble = new WobbleGoalV2();
+    private Bumper bumper = new Bumper();
     private Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
     @Override
     public void runOpMode() throws InterruptedException{
@@ -46,6 +49,7 @@ public class TeleOpV2 extends LinearOpMode {
         flywheel.init(hardwareMap);
         flywheelServo.init(hardwareMap);
         wobble.init(hardwareMap);
+        bumper.init(hardwareMap);
         drive.setFlywheel(flywheel);
         boolean toggleWobble = false;
         boolean formerLeftDpad = false;
@@ -59,6 +63,7 @@ public class TeleOpV2 extends LinearOpMode {
         boolean formerLStick = false;
         boolean formerRStick = false;
         boolean formerRightDpad = false;
+        boolean formerUpDpad = false;
         double r, robotAngle, rightX;
         while(!opModeIsActive() && !isStopRequested()){
             telemetry.addData("Status", "Waiting in init");
@@ -163,7 +168,7 @@ public class TeleOpV2 extends LinearOpMode {
             }
             if(formerLBump){
                 if(!gamepad1.left_bumper){
-                    flywheel.toggle(highSpeed);
+                    flywheel.toggle(speed);
                     formerLBump = false;
                 }
             }
@@ -201,6 +206,7 @@ public class TeleOpV2 extends LinearOpMode {
             if(formerA){
                 if(!gamepad1.a){
                     linkage.toggle();
+                    bumper.toggle();
                     formerA = false;
                 }
             }
@@ -213,9 +219,7 @@ public class TeleOpV2 extends LinearOpMode {
                 if(formerLeftDpad){
                     formerLeftDpad = false;
                     singleshot = true;
-                    flywheel.toggle(powerSpeed);
                     move3inches(drive);
-
                 }
             }
 
@@ -226,17 +230,30 @@ public class TeleOpV2 extends LinearOpMode {
             if(formerRightDpad){
                 if(!gamepad1.dpad_right){
                     formerRightDpad = false;
-                    singleshot = false;
-                    flywheel.toggle(highSpeed);
+                    if(singleshot){
+                        singleshot = false;
+                        speed = highSpeed;
+                    }
+                    else{
+                        singleshot = true;
+                        speed = powerSpeed;
+                    }
                 }
             }
-
-
+            if(gamepad1.dpad_up){
+                formerUpDpad = true;
+            }
+            if(formerUpDpad){
+                if(!gamepad1.dpad_up){
+                    formerUpDpad = false;
+                }
+            }
 
         }
     }
 
     public void move3inches(SampleMecanumDrive drive){
+        drive.update();
         Trajectory pen15size = drive.trajectoryBuilder(drive.getPoseEstimate())
                 .strafeRight(inches)
                 .build();
