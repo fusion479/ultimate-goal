@@ -115,9 +115,6 @@ public class AprilAuton extends LinearOpMode {
                                 DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive
                                 .getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .addDisplacementMarker(()->{
-                    flywheelServo.burst(3);
-                })
                 .build();
         
         Trajectory shootRings = drive.trajectoryBuilder(getRings.end())
