@@ -102,7 +102,7 @@ public class AprilAuton extends LinearOpMode {
                 .addDisplacementMarker(()->{
                     wobbleMech.clamp();
                     intake.intake(1);
-                    flywheel.toggle(speed+30);
+                    flywheel.toggle(speed+10);
                 })
                 .build();
 

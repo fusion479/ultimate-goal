@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.hardware.FlywheelPIDF;
 import org.firstinspires.ftc.teamcode.hardware.FlywheelServo;
 import org.firstinspires.ftc.teamcode.hardware.FlywheelWEncoders;
 import org.firstinspires.ftc.teamcode.hardware.Linkage;
+import org.firstinspires.ftc.teamcode.hardware.Stick;
 import org.firstinspires.ftc.teamcode.hardware.WobbleGoal;
 import org.firstinspires.ftc.teamcode.hardware.WobbleGoalV2;
 
@@ -34,6 +35,7 @@ public class TeleOpV2 extends LinearOpMode {
     private CompleteIntake intake = new CompleteIntake();
     private WobbleGoalV2 wobble = new WobbleGoalV2();
     private Bumper bumper = new Bumper();
+    private Stick stick = new Stick();
     private Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
     @Override
     public void runOpMode() throws InterruptedException{
@@ -50,7 +52,9 @@ public class TeleOpV2 extends LinearOpMode {
         flywheelServo.init(hardwareMap);
         wobble.init(hardwareMap);
         bumper.init(hardwareMap);
+        stick.init(hardwareMap);
         drive.setFlywheel(flywheel);
+        boolean lowerStickAfterInit = false;
         boolean toggleWobble = false;
         boolean formerLeftDpad = false;
         boolean formerRightClick = false;
@@ -71,6 +75,10 @@ public class TeleOpV2 extends LinearOpMode {
         }
 //why doesnt my code work
         while(opModeIsActive()){
+            if (lowerStickAfterInit ==false){
+                stick.toggle();
+                lowerStickAfterInit = true;
+            }
             Trajectory shootStance;
             if(gamepad1.right_stick_button){
                 formerRStick = true;
@@ -207,6 +215,7 @@ public class TeleOpV2 extends LinearOpMode {
                 if(!gamepad1.a){
                     linkage.toggle();
                     bumper.toggle();
+                    stick.toggle();
                     formerA = false;
                 }
             }
