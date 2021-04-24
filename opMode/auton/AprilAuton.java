@@ -389,7 +389,6 @@ public class AprilAuton extends LinearOpMode {
             drive.followTrajectory(reset);
             drive.followTrajectory(getWobble);
             drive.followTrajectory(getRings);
-            drive.followTrajectory(shootRings);
             flywheelServo.burst(3);
             sleep(800);
             linkage.toggle();
