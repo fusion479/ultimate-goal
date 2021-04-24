@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.DelayCommand;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Bumper;
 import org.firstinspires.ftc.teamcode.hardware.CompleteIntake;
@@ -101,15 +102,24 @@ public class AprilAuton extends LinearOpMode {
                 .addDisplacementMarker(()->{
                     wobbleMech.clamp();
                     intake.intake(1);
+                    flywheel.toggle(speed + 30);
                 })
                 .build();
 
         Trajectory getRings = drive.trajectoryBuilder(getWobble.end())
-                .forward(26)
-                .addDisplacementMarker(1,()->{
-                    flywheel.toggle(speed);
+                .addDisplacementMarker(1, () -> {
+                    delay.delay(toggleLinkage,1000);
+                })
+                .forward(26,
+                        SampleMecanumDrive.getVelocityConstraint(7, DriveConstants.MAX_ANG_VEL,
+                                DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive
+                                .getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .addDisplacementMarker(()->{
+                    flywheelServo.burst(3);
                 })
                 .build();
+        
         Trajectory shootRings = drive.trajectoryBuilder(getRings.end())
                 .addDisplacementMarker(()->{
                     linkage.toggle();
@@ -120,7 +130,7 @@ public class AprilAuton extends LinearOpMode {
                 })
                 .build();
 
-        Trajectory getLast = drive.trajectoryBuilder(shootRings.end())
+        Trajectory getLast = drive.trajectoryBuilder(getRings.end())
                 .addDisplacementMarker(()->{
                     intake.intake(1);
                 })
